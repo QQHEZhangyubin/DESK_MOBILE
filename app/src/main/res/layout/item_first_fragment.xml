@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="130dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="4dp"
+                android:layout_width="150dp"
+                android:layout_height="100dp">
+                <ImageView
+                    android:src="@mipmap/ic_launcher_round"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:scaleType="center"/>
+            </android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/room_id"
+                android:layout_gravity="center"
+                android:text="东区401"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="200dp"
+            android:layout_height="120dp">
+            <TextView
+                android:id="@+id/seat_avaible_account"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:text="可用空座：56"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/seat_total_account"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:textSize="16sp"
+                android:text="座位总数：256"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/room_img"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/go_right_pressed"/>
+        </LinearLayout>
+    </LinearLayout>
+   <view
+       android:paddingTop="8dp"
+       android:background="@color/colorAccent"
+       android:layout_width="match_parent"
+       android:layout_height="2dp"></view>
+    </LinearLayout>
+
