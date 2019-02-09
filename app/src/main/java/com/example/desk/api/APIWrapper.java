@@ -7,6 +7,8 @@ import com.example.desk.entity.CommentBean;
 import com.example.desk.entity.ShuoShuo;
 import com.example.desk.entity.T1;
 import com.example.desk.entity.T2;
+import com.example.desk.entity.T3;
+import com.example.desk.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,5 +45,13 @@ public class APIWrapper extends RetrofitUtil {
     }
     public Observable<String> uploadImgs(List<MultipartBody.Part> file, String data){
         return getmAPIService().uploadImgs(file,data);
+    }
+
+    public Observable<T3> registeruser(String userid,String password,String college,String classs,String birthday,String email,String gender){
+        return getmAPIService().registeruser(userid,password,college,classs,birthday,email,gender);
+    }
+
+    public Observable<User> loginuser(String userid,String password){
+        return getmAPIService().loginuser(userid,password);
     }
 }

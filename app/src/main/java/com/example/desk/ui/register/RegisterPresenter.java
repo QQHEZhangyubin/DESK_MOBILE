@@ -1,20 +1,16 @@
 package com.example.desk.ui.register;
 
 import android.util.Patterns;
-import android.widget.Toast;
 
-import com.example.desk.api.RegisterRequestServer;
-import com.example.desk.entity.Message;
+import com.example.desk.api.APIWrapper;
+import com.example.desk.entity.T3;
 import com.example.desk.entity.User;
 import com.example.desk.mvp.BasePresenterImpl;
+import com.example.desk.util.TLog;
 
-import java.io.IOException;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * MVPPlugin
@@ -23,18 +19,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterPresenter extends BasePresenterImpl<RegisterContract.View> implements RegisterContract.Presenter{
 
+    private String m;
     @Override
-    public boolean validate(User user) {
-        //TODO:验证用户注册的信息是否符合要求
+    public boolean validate(User user1) {
+        //验证用户注册的信息是否符合要求
         boolean valid = true;
-        if (!user.getUid().isEmpty() && !user.getCollege().isEmpty() && !user.getClasss().isEmpty()
-                && !user.getBirthday().isEmpty() && !user.getEmail().isEmpty() && !user.getPassword().isEmpty()
-                && !user.getGender().isEmpty()){
-            if (!Patterns.EMAIL_ADDRESS.matcher(user.getEmail()).matches()){
+        User.DataBean databean = user1.getData();
+        if(databean.getGender() == null){
+            mView.erroremail("没有选择性别");
+            valid = false;
+        }
+        if (!databean.getUserid().isEmpty() && !databean.getCollege().isEmpty() && !databean.getClassss().isEmpty()
+                && !databean.getBirthday().isEmpty() && !databean.getEmail().isEmpty() && !databean.getPassword().isEmpty()
+                ){
+            if (!Patterns.EMAIL_ADDRESS.matcher(databean.getEmail()).matches()){
                 mView.erroremail("邮箱信息存在问题！");
                 valid = false;
             }
-            if (user.getPassword().length()<4||user.getPassword().length()>10){
+            if (databean.getPassword().length()<4||databean.getPassword().length()>10){
                 mView.errorpwd("密码需要在4-10位之间！");
                 valid = false;
             }
@@ -46,30 +48,35 @@ public class RegisterPresenter extends BasePresenterImpl<RegisterContract.View> 
     }
 
     @Override
-    public boolean register(User user) {
-        //TODO：提交用户注册信息到服务器
-         boolean flag = true;
-        mView.registerfaith("注册失败，暂时连接不到服务器！");
-        mView.registersuccess(user);
-        ///////////////////////
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://localhost:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        RegisterRequestServer registerRequestServer = retrofit.create(RegisterRequestServer.class);
+    public void register(final User user) {
+        User.DataBean dataBean = user.getData();
+        APIWrapper.getInstance().registeruser(dataBean.getUserid(),dataBean.getPassword(),dataBean.getCollege(),dataBean.getClassss()
+        ,dataBean.getBirthday(),dataBean.getEmail(),dataBean.getGender())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<T3>() {
+                    @Override
+                    public void onCompleted() {
+                        if (m.equals("success")){
+                            mView.registersuccess(user);
+                        }
+                        if (m.equals("existed")){
+                            mView.registerfaith("登录账号尚未注册！");
+                        }
 
-        Call<Message> call = registerRequestServer.getCall(user.getUid());
-        //发送网络请求(同步)
-        try {
-            Response<Message> response = call.execute();
-            System.out.println(response);
-        } catch (IOException e) {
-            e.printStackTrace();
-            flag = false;
-        }
+                    }
 
-        ////////
+                    @Override
+                    public void onError(Throwable e) {
+                        TLog.error(e.toString());
+                        mView.registerfaith("注册失败，暂时连接不到服务器！");
+                    }
 
-        return flag;
+                    @Override
+                    public void onNext(T3 t3) {
+                        TLog.log("注册情况" + t3.getMessage());
+                        m = t3.getMessage();
+                    }
+                });
     }
 }

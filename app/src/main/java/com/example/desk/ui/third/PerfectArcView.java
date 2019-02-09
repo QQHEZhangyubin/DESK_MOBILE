@@ -24,10 +24,11 @@ import com.example.desk.R;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 
-import androidx.annotation.Nullable;
 
 
 public class PerfectArcView extends View implements Target {

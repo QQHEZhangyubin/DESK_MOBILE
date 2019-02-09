@@ -2,7 +2,9 @@ package com.example.desk.ui.register;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.example.desk.R;
 import com.example.desk.entity.User;
 import com.example.desk.mvp.MVPBaseActivity;
+import com.example.desk.ui.login.LoginActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +31,7 @@ import butterknife.OnClick;
  */
 
 public class RegisterActivity extends MVPBaseActivity<RegisterContract.View, RegisterPresenter> implements RegisterContract.View {
-    private static final String TAG = "SignupActivity";
+
     @BindView(R.id.input_name)
     EditText inputName;
     @BindView(R.id.input_email)
@@ -49,98 +52,108 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.View, Reg
     AppCompatButton btnSignup;
     @BindView(R.id.link_login)
     TextView linkLogin;
-    private User user;
-
+    @BindView(R.id.input_college)
+    EditText inputCollege;
+    private User.DataBean dataBean;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
-        final User.DataBean usr = User.getInstance().getData();
+        dataBean = new User.DataBean();//实例化一个databean
         radioGroupSexId.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                int id= group.getCheckedRadioButtonId();
-                switch (id){
+                int id = group.getCheckedRadioButtonId();
+                switch (id) {
                     case R.id.boy_id:
-                        usr.setGender(boyId.getText().toString());
+                        dataBean.setGender(boyId.getText().toString());
                         break;
                     case R.id.girl_id:
-                        user.setGender(girlId.getText().toString());
+                        dataBean.setGender(girlId.getText().toString());
                         break;
                 }
             }
         });
-
-
     }
 
     @OnClick({R.id.btn_signup, R.id.link_login})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_signup:
-                Log.d(TAG, "Signup");
                 String uid = inputName.getText().toString();
                 String eamil = inputEmail.getText().toString();
                 String classs = inputClass.getText().toString();
                 String pwd = inputPassword.getText().toString();
                 String birhday = inputBirthday.getText().toString();
-                user.setUid(uid);
-                user.setBirthday(birhday);
-                user.setClasss(classs);
-                user.setEmail(eamil);
-                user.setPassword(pwd);
+                String college = inputCollege.getText().toString();
+                dataBean.setUserid(uid);
+                dataBean.setBirthday(birhday);
+                dataBean.setClassss(classs);
+                dataBean.setEmail(eamil);
+                dataBean.setPassword(pwd);
+                dataBean.setCollege(college);
+                User.ClearUser();
+                User user = User.getInstance();
+                user.setData(dataBean);
                 if (!mPresenter.validate(user)) {
                     return;
                 }
                 btnSignup.setEnabled(false);
-                final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this,
+                progressDialog = new ProgressDialog(RegisterActivity.this,
                         R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Creating Account...");
+                progressDialog.setMessage("创建账户...");
                 progressDialog.show();
                 mPresenter.register(user);
-                new android.os.Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                },3000);
                 break;
             case R.id.link_login:
-                finish();
+                Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
+                startActivity(intent);
                 break;
         }
     }
+
     //注册信息存在空项
     @Override
     public void emptymessage(String error) {
-        Toast.makeText(this,error,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
         btnSignup.setEnabled(true);
     }
+
     //注册密码不符合要求
     @Override
     public void errorpwd(String error) {
-        Toast.makeText(this,error,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
         btnSignup.setEnabled(true);
     }
+
     //不符合邮箱格式
     @Override
     public void erroremail(String error) {
-        Toast.makeText(this,error,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
         btnSignup.setEnabled(true);
     }
+
     //注册成功
     @Override
-    public User registersuccess(User user) {
-        Toast.makeText(this,"注册成功！",Toast.LENGTH_SHORT).show();
+    public void registersuccess(User user) {
+        progressDialog.dismiss();
+        Toast.makeText(this, "注册成功！", Toast.LENGTH_SHORT).show();
         btnSignup.setEnabled(true);
-        return null;
+        Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
+        intent.putExtra("xuehao",user.getData().getUserid());
+        intent.putExtra("mima",user.getData().getPassword());
+        startActivity(intent);
     }
+
     //注册失败
     @Override
     public void registerfaith(String error) {
-        Toast.makeText(this,error,Toast.LENGTH_SHORT).show();
+        progressDialog.dismiss();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
         btnSignup.setEnabled(true);
     }
+
 }

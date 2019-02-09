@@ -6,6 +6,8 @@ import com.example.desk.entity.CommentBean;
 import com.example.desk.entity.ShuoShuo;
 import com.example.desk.entity.T1;
 import com.example.desk.entity.T2;
+import com.example.desk.entity.T3;
+import com.example.desk.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,4 +40,10 @@ public interface APIService {
     @Multipart
     @POST("imgs/upload")
     Observable<String> uploadImgs(@Part List<MultipartBody.Part> file, @Query("data2") String data);
+
+    @POST("doRegister")
+    Observable<T3> registeruser(@Query("userid") String userid,@Query("password") String password,@Query("college") String college,@Query("classs") String classs,@Query("birthday") String birthday,@Query("email") String email,@Query("gender") String gender);
+
+    @POST("login")
+    Observable<User> loginuser(@Query("userid") String userid,@Query("password") String  password);
 }

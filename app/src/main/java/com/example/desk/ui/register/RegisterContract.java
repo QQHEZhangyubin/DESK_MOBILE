@@ -16,12 +16,12 @@ public class RegisterContract {
         void errorpwd(String error);//不合适的密码
         void erroremail(String error);//不合适的邮箱
 
-        User registersuccess(User user);//注册成功
+        void registersuccess(User user);//注册成功
         void registerfaith(String error);//注册失败
     }
 
     interface  Presenter extends BasePresenter<View> {
         boolean validate(User user);//验证用户注册信息是否合法
-        boolean register(User user);//提交信息到服务器
+        void register(User user);//提交信息到服务器
     }
 }

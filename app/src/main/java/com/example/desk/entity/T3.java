@@ -1,9 +1,9 @@
 package com.example.desk.entity;
 
-public class Message {
+public class T3 {
 
     /**
-     * 用户注册接口
+     * 测试用户注册的实体
      * message : existed
      */
 

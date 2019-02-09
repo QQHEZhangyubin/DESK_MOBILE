@@ -14,14 +14,8 @@ public class RetrofitUtil {
 
     private static Retrofit getmRetrofit(){
         if (mRetrofit == null){
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .writeTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .build();
             mRetrofit = new Retrofit.Builder()
                     .baseUrl(API_HOST)
-                    .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();
