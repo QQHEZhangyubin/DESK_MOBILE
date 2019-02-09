@@ -1,15 +1,15 @@
 package com.example.desk.entity;
 
 public class Seat {
+    /**
+     * roomid : 东区101
+     * total_seat : 3
+     * avail_seat : 0
+     */
+
     private String roomid;
     private String total_seat;
     private String avail_seat;
-
-    public Seat(String total_seat, String avail_seat,String roomid) {
-        this.total_seat = total_seat;
-        this.avail_seat = avail_seat;
-        this.roomid = roomid;
-    }
 
     public String getRoomid() {
         return roomid;

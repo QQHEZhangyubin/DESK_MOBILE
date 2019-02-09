@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * 邮箱 784787081@qq.com
  */
 
-public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresenter> implements RoomContract.View,DeskAdapter.Two {
+public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresenter> implements RoomContract.View {
     private static final int RESULT_REQUEST_CODE = 2;
     @BindView(R.id.iv_welcome)
     ImageView ivWelcome;
@@ -46,7 +46,6 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
     AppBarLayout appBar;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    private List<Desk> deskList = new ArrayList<>();
     private Desk tempdesk;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -64,7 +63,7 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
         ButterKnife.bind(this);
         Intent intent = getIntent();
         String position = intent.getStringExtra("roomid");
-        deskList = mPresenter.getDataTwo(position);
+        mPresenter.getDataTwo(position);
         Glide.with(RoomActivity.this).load(R.mipmap.welcome).into(ivWelcome);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -72,16 +71,6 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         collapsingToolbar.setTitle(position);
-        StaggeredGridLayoutManager layoutManager=new StaggeredGridLayoutManager
-                (6,StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        DeskAdapter adapter = new DeskAdapter(RoomActivity.this, deskList);
-        recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public void RequestDesk(Desk desk) {
-        mPresenter.getDataThree(desk);
     }
     //当前座位正在被他人使用
     @Override
@@ -98,19 +87,38 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
     public void ErrorThree(String error) {
         Toast.makeText(RoomActivity.this,error,Toast.LENGTH_SHORT).show();
     }
-    //该座位可以被抢，扫描二维码之后开抢
-    @Override
-    public void Success(Desk desk) {
-        //TODO:可以抢该座位,通过扫描二维码再抢一次
-        tempdesk = desk;
-        Intent intent = new Intent(RoomActivity.this,ScannerActivity.class);
-        startActivityForResult(intent,RESULT_REQUEST_CODE);
-    }
+
     //成功抢到该座位
     @Override
     public void Success2(String info) {
-        Toast.makeText(RoomActivity.this,info,Toast.LENGTH_SHORT).show();
+        //该座位可以被抢，扫描二维码之后开抢
+       // Toast.makeText(RoomActivity.this,info,Toast.LENGTH_SHORT).show();
         //onRestart();
+        Intent intent = new Intent(RoomActivity.this,ScannerActivity.class);
+        startActivityForResult(intent,RESULT_REQUEST_CODE);
+    }
+
+    @Override
+    public void Success3(List<Desk> deskList) {
+        //请求网络数据成功
+        DeskAdapter.Two two = new DeskAdapter.Two() {
+            @Override
+            public void RequestDesk(Desk desk) {
+                mPresenter.getDataThree(desk);
+            }
+        };
+        StaggeredGridLayoutManager layoutManager=new StaggeredGridLayoutManager
+                (6,StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        DeskAdapter adapter = new DeskAdapter(RoomActivity.this, deskList);
+        adapter.setTwo(two);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void Success4(String s) {
+        //TODO:设计一个弹出的对话框
+        Toast.makeText(RoomActivity.this,s,Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -122,7 +130,7 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
                         return;
                     }
                     String content = data.getStringExtra(Constant.EXTRA_RESULT_CONTENT);//得到扫描的二维码data
-                    mPresenter.QiangZuo(content,tempdesk);//根据二维码data，具体desk data抢座位
+                    mPresenter.QiangZuo(content);//根据二维码data，具体desk data抢座位
                     break;
                 default:
                     break;

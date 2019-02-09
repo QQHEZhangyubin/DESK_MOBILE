@@ -3,10 +3,13 @@ package com.example.desk.api;
 
 
 import com.example.desk.entity.CommentBean;
+import com.example.desk.entity.Desk;
+import com.example.desk.entity.Seat;
 import com.example.desk.entity.ShuoShuo;
 import com.example.desk.entity.T1;
 import com.example.desk.entity.T2;
 import com.example.desk.entity.T3;
+import com.example.desk.entity.T4;
 import com.example.desk.entity.User;
 
 import java.util.ArrayList;
@@ -46,4 +49,13 @@ public interface APIService {
 
     @POST("login")
     Observable<User> loginuser(@Query("userid") String userid,@Query("password") String  password);
+
+    @POST("seat/queryseatinfo")
+    Observable<List<Seat>> QuerySeatInfo();
+
+    @POST("seat/queryempteyseat")
+    Observable<List<Desk>> QueryEmptySeat(@Query("location") String location,@Query("classroom") String classroom);
+
+    @POST("seat/chooseseat")
+    Observable<T4> ChooseSeat(@Query("location") String location, @Query("classroom") String classroom, @Query("seatnumber") String seatnumber, @Query("state") String state);
 }

@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private void normalFragment() {
         fm = getSupportFragmentManager();
         transaction = fm.beginTransaction();
-        fragment = fragments.get(1);
+        fragment = fragments.get(0);
         transaction.replace(R.id.mFragment,fragment);
         transaction.commit();
     }

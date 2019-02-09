@@ -4,10 +4,13 @@ package com.example.desk.api;
 
 
 import com.example.desk.entity.CommentBean;
+import com.example.desk.entity.Desk;
+import com.example.desk.entity.Seat;
 import com.example.desk.entity.ShuoShuo;
 import com.example.desk.entity.T1;
 import com.example.desk.entity.T2;
 import com.example.desk.entity.T3;
+import com.example.desk.entity.T4;
 import com.example.desk.entity.User;
 
 import java.util.ArrayList;
@@ -15,6 +18,9 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class APIWrapper extends RetrofitUtil {
     private static APIWrapper mAPIWrapper;
@@ -53,5 +59,17 @@ public class APIWrapper extends RetrofitUtil {
 
     public Observable<User> loginuser(String userid,String password){
         return getmAPIService().loginuser(userid,password);
+    }
+
+    public Observable<List<Seat>> QuerySeatInfo(){
+        return getmAPIService().QuerySeatInfo();
+    }
+
+    public Observable<List<Desk>> QueryEmptySeat(String location,String classroom){
+        return getmAPIService().QueryEmptySeat(location, classroom);
+    }
+
+    public Observable<T4> ChooseSeat(String location,String classroom,String seatnumber,String state){
+        return getmAPIService().ChooseSeat(location, classroom, seatnumber, state);
     }
 }

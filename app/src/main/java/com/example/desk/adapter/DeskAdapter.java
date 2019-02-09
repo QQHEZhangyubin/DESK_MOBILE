@@ -22,7 +22,10 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.ViewHolder> {
     }
     private List<Desk> desks;
     private Context mContext;
-    private Two two;
+    Two two;
+    public void setTwo(Two two){
+        this.two = two;
+    }
     public DeskAdapter(Context mContext,List<Desk> desks) {
         this.desks = desks;
         this.mContext = mContext;
@@ -35,9 +38,13 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.ViewHolder> {
         viewHolder.deskImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 int p=viewHolder.getAdapterPosition();
                 Desk desk=desks.get(p);
-                two.RequestDesk(desk);
+                if (two != null){
+                    two.RequestDesk(desk);
+                }
+
             }
         });
         return viewHolder;

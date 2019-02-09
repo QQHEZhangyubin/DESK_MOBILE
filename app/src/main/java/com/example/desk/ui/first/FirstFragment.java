@@ -30,11 +30,10 @@ import butterknife.Unbinder;
  * 邮箱 784787081@qq.com
  */
 
-public class FirstFragment extends MVPBaseFragment<FirstContract.View, FirstPresenter> implements FirstContract.View ,SeatAdapter.One{
+public class FirstFragment extends MVPBaseFragment<FirstContract.View, FirstPresenter> implements FirstContract.View{
     @BindView(R.id.rv_one)
     RecyclerView rvOne;
     Unbinder unbinder;
-    private List<Seat> seats = new ArrayList<>();
     public FirstFragment() {
     }
 
@@ -49,10 +48,7 @@ public class FirstFragment extends MVPBaseFragment<FirstContract.View, FirstPres
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         unbinder = ButterKnife.bind(this, view);
-        seats = mPresenter.getSeatData();
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        rvOne.setLayoutManager(layoutManager);
-        rvOne.setAdapter(new SeatAdapter(getContext(),seats));
+        mPresenter.getSeatData();
         return view;
     }
 
@@ -62,15 +58,28 @@ public class FirstFragment extends MVPBaseFragment<FirstContract.View, FirstPres
         unbinder.unbind();
     }
 
-    @Override
-    public void Seat_click(String roomid) {
-        Intent intent = new Intent(getActivity(),RoomActivity.class);
-        intent.putExtra("roomid",roomid);
-        startActivity(intent);
-    }
     //请求网络数据失败
     @Override
     public void Error(String error) {
         Toast.makeText(getContext(),error,Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void Success(List<Seat> seatList) {
+        //请求数据成功
+        SeatAdapter.OneOnPlayClickListener oneOnPlayClickListener = new SeatAdapter.OneOnPlayClickListener() {
+            @Override
+            public void Seat_click(String roomid) {
+                Intent intent = new Intent(getActivity(),RoomActivity.class);
+                intent.putExtra("roomid",roomid);
+                startActivity(intent);
+            }
+        };
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        rvOne.setLayoutManager(layoutManager);
+        SeatAdapter adapter = new SeatAdapter(getContext(), seatList);
+        adapter.setOneOnPlayClickListener(oneOnPlayClickListener);
+        rvOne.setAdapter(adapter);
     }
 }

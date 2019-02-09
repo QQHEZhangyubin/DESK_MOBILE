@@ -55,11 +55,13 @@ public class MyinfoActivity extends MVPBaseActivity<MyinfoContract.View, MyinfoP
         Glide.with(this).load(R.drawable.head)
                 .bitmapTransform(new CropCircleTransformation(this))
                 .into(hHead);
+        /*
         User.DataBean databean = User.getInstance().getData();
         ivCollege.setRightDesc(databean.getCollege());
         ivClass.setRightDesc(databean.getClassss());
         ivSex.setRightDesc(databean.getGender());
         ivEmail.setRightDesc(databean.getEmail());
         userUid.setText(databean.getUserid());
+        */
     }
 }

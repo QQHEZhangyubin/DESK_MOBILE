@@ -20,6 +20,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.example.desk.R;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -92,10 +93,11 @@ public class PerfectArcView extends View implements Target {
     /**
      * 加载网络图片
      *
-     * @param url
+     * @param
+     *
      */
-    public void setImageUrl(String url) {
-        Picasso.with(getContext()).load(url).into(this);
+    public void setImageUrl() {
+        Picasso.with(getContext()).load(R.mipmap.welcome).into(this);
     }
     /**
      * @param startColor

@@ -146,6 +146,7 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.View, Reg
         intent.putExtra("xuehao",user.getData().getUserid());
         intent.putExtra("mima",user.getData().getPassword());
         startActivity(intent);
+        finish();
     }
 
     //注册失败

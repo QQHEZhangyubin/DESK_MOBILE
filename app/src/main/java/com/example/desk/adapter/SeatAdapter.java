@@ -19,13 +19,17 @@ import butterknife.ButterKnife;
 public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
 
 
-    public interface One {
+    public interface OneOnPlayClickListener {
         void Seat_click(String roomid);//选择点击房间，进入下一个活动
     }
 
     private Context mContext;
     private List<Seat> seats;
-    private One one;
+    OneOnPlayClickListener oneOnPlayClickListener;
+
+    public void setOneOnPlayClickListener(OneOnPlayClickListener oneOnPlayClickListener){
+        this.oneOnPlayClickListener = oneOnPlayClickListener;
+    }
 
     public SeatAdapter(Context mContext, List<Seat> seats) {
         this.mContext = mContext;
@@ -44,7 +48,9 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
             public void onClick(View v) {
                 int p = holder.getAdapterPosition();
                 Seat seat = seats.get(p);
-                one.Seat_click(seat.getRoomid());
+                if (oneOnPlayClickListener != null){
+                    oneOnPlayClickListener.Seat_click(seat.getRoomid());
+                }
             }
         });
         return holder;

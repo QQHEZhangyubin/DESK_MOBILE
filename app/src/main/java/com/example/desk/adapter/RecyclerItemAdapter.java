@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 public class RecyclerItemAdapter extends RecyclerView.Adapter<RecyclerItemAdapter.ViewHolder> {
     private Context mContext;
     private ArrayList<ShuoShuo> items;
-    public static interface  OnPlayClickListener{
+    public  interface  OnPlayClickListener{
         void onItemClick(ShuoShuo shuo);
     }
     OnPlayClickListener onPlayClickListener;

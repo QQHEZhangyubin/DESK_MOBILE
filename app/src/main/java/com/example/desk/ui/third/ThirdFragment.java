@@ -26,7 +26,6 @@ import butterknife.Unbinder;
  */
 
 public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPresenter> implements ThirdContract.View {
-    public static final String URL = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1547964247482&di=0c2b940409488695883a4b0fe7fac5ec&imgtype=0&src=http%3A%2F%2Fwww.veeqi.com%2Fuploadfile%2F2018%2F0409%2F20180409031427895.jpg";
     @BindView(R.id.header_view)
     PerfectArcView headerView;
     Unbinder unbinder;
@@ -49,9 +48,11 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         StatusBarUtils.setColor(getActivity(), getResources().getColor(R.color.start_color), 0);
         View view = inflater.inflate(R.layout.fragment_third, container, false);
-        mArcHeaderView.setImageUrl(URL);
+        mArcHeaderView = (PerfectArcView)view.findViewById(R.id.header_view);
+        mArcHeaderView.setImageUrl();
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
