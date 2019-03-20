@@ -61,7 +61,7 @@ public class RegisterPresenter extends BasePresenterImpl<RegisterContract.View> 
                             mView.registersuccess(user);
                         }
                         if (m.equals("existed")){
-                            mView.registerfaith("登录账号尚未注册！");
+                            mView.registerfaith("该账号已经注册！");
                         }
 
                     }

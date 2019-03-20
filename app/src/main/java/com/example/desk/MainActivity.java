@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     }
     //设置选中和未选择的状态
     private void setTabState() {
+        //TODO:颜色要修改
         setHomeState();
         setMessageState();
         setFindState();

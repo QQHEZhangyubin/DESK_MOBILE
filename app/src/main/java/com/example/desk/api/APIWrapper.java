@@ -69,7 +69,8 @@ public class APIWrapper extends RetrofitUtil {
         return getmAPIService().QueryEmptySeat(location, classroom);
     }
 
-    public Observable<T4> ChooseSeat(String location,String classroom,String seatnumber,String state){
-        return getmAPIService().ChooseSeat(location, classroom, seatnumber, state);
+    public Observable<T4> ChooseSeat(String location,String classroom,String seatnumber,String userid){
+        return getmAPIService().ChooseSeat(location, classroom, seatnumber, userid);
     }
+
 }

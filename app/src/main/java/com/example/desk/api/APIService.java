@@ -57,5 +57,6 @@ public interface APIService {
     Observable<List<Desk>> QueryEmptySeat(@Query("location") String location,@Query("classroom") String classroom);
 
     @POST("seat/chooseseat")
-    Observable<T4> ChooseSeat(@Query("location") String location, @Query("classroom") String classroom, @Query("seatnumber") String seatnumber, @Query("state") String state);
+    Observable<T4> ChooseSeat(@Query("location") String location, @Query("classroom") String classroom, @Query("seatnumber") String seatnumber, @Query("userid") String userid);
+
 }

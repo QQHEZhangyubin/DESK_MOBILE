@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.desk.MainActivity;
 import com.example.desk.R;
 import com.example.desk.adapter.DeskAdapter;
 import com.example.desk.entity.Desk;
@@ -119,6 +120,9 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
     public void Success4(String s) {
         //TODO:设计一个弹出的对话框
         Toast.makeText(RoomActivity.this,s,Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(RoomActivity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

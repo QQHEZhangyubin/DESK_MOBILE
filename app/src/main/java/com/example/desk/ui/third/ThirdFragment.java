@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.desk.R;
 import com.example.desk.mvp.MVPBaseFragment;
@@ -72,9 +73,10 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
                 break;
             case R.id.lv_2:
                 //进入使用记录
+                Toast.makeText(getActivity(),"有待开发",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.lv_3:
-                //进入软件信息
+                //TODO：进入软件信息,弹出对画框即可
                 break;
         }
     }

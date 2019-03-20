@@ -38,7 +38,6 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.ViewHolder> {
         viewHolder.deskImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 int p=viewHolder.getAdapterPosition();
                 Desk desk=desks.get(p);
                 if (two != null){
@@ -54,6 +53,7 @@ public class DeskAdapter extends RecyclerView.Adapter<DeskAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         Desk desk = desks.get(position);
         switch (desk.getState()){
+            //TODO：根据a,b,c 来设置不同背景图片
             case "a":
                 holder.deskImage.setImageResource(R.mipmap.seat_01);
                 break;

@@ -8,7 +8,7 @@ public class StaticClass {
     //预选选座服务器
     public static final String YUYUE_URL="http://192.168.43.123:8080/AndroidWeb/Reserve";
     //注册服务器
-    public static final String REGIISTER_URL="http://172.21.57.82:8080/AndroidWeb/Register";
+    public static final String REGIISTER_URL="http://172.16.63.128:8080/desk/doRegister";
     //登录服务器
     public static final String LOGIN_URL="http://192.168.43.123:8080/AndroidWeb/Landing";
     //闪屏页延时

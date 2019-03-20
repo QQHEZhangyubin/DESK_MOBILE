@@ -3,6 +3,7 @@ package com.example.desk.ui.room;
 import com.example.desk.api.APIWrapper;
 import com.example.desk.entity.Desk;
 import com.example.desk.entity.T4;
+import com.example.desk.entity.User;
 import com.example.desk.mvp.BasePresenterImpl;
 import com.example.desk.util.TLog;
 
@@ -51,7 +52,7 @@ public class RoomPresenter extends BasePresenterImpl<RoomContract.View> implemen
     @Override
     public void getDataThree(Desk desk) {
         //TODO:根据点击的具体座位查看座位状态，再决定是否可以抢座
-        APIWrapper.getInstance().ChooseSeat(desk.getLocation(),desk.getClassroom(),desk.getSeatnumber()+"",desk.getState())
+        APIWrapper.getInstance().ChooseSeat(desk.getLocation(),desk.getClassroom(),desk.getSeatnumber()+"",User.getInstance().getData().getUserid())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<T4>() {
@@ -59,12 +60,8 @@ public class RoomPresenter extends BasePresenterImpl<RoomContract.View> implemen
                     public void onCompleted() {
                         if (detatil.equals("座位已抢到手，赶紧开始繁忙的学习生活吧！")){
                             mView.Success2(detatil);
-                        }
-                        if (detatil.equals("当前座位正在被他人使用，换个位置试试吧！")){
+                        }else {
                             mView.ErrorTwo(detatil);
-                        }
-                        if (detatil.equals("这个位置的主人现在离开了一会，不怕被发现的话，可以暂时坐会！")){
-                            mView.ErrorThree(detatil);
                         }
                     }
 

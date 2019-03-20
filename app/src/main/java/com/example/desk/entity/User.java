@@ -60,6 +60,15 @@ public class User {
         private String email;
         private String gender;
         private String classss;
+        private String userlogo;
+
+        public String getUserlogo() {
+            return userlogo;
+        }
+
+        public void setUserlogo(String userlogo) {
+            this.userlogo = userlogo;
+        }
 
         public String getUserid() {
             return userid;
