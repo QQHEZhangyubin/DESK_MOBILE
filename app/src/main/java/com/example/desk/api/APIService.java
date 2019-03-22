@@ -4,12 +4,14 @@ package com.example.desk.api;
 
 import com.example.desk.entity.CommentBean;
 import com.example.desk.entity.Desk;
+import com.example.desk.entity.MyState;
 import com.example.desk.entity.Seat;
 import com.example.desk.entity.ShuoShuo;
 import com.example.desk.entity.T1;
 import com.example.desk.entity.T2;
 import com.example.desk.entity.T3;
 import com.example.desk.entity.T4;
+import com.example.desk.entity.T5;
 import com.example.desk.entity.User;
 
 import java.util.ArrayList;
@@ -58,5 +60,13 @@ public interface APIService {
 
     @POST("seat/chooseseat")
     Observable<T4> ChooseSeat(@Query("location") String location, @Query("classroom") String classroom, @Query("seatnumber") String seatnumber, @Query("userid") String userid);
+
+    @POST("seat/enduse")
+    Observable<T5> EndUse(@Query("location") String location, @Query("classroom") String classroom, @Query("seatnumber") String seatnumber);
+    @POST("seat/changestatus")
+    Observable<T5> ChangeStatus(@Query("location") String location, @Query("classroom") String classroom, @Query("seatnumber") String seatnumber);
+
+    @POST("seat/seemystate")
+    Observable<MyState> SeeMystate(@Query("userid") String userid);
 
 }

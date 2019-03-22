@@ -5,12 +5,14 @@ package com.example.desk.api;
 
 import com.example.desk.entity.CommentBean;
 import com.example.desk.entity.Desk;
+import com.example.desk.entity.MyState;
 import com.example.desk.entity.Seat;
 import com.example.desk.entity.ShuoShuo;
 import com.example.desk.entity.T1;
 import com.example.desk.entity.T2;
 import com.example.desk.entity.T3;
 import com.example.desk.entity.T4;
+import com.example.desk.entity.T5;
 import com.example.desk.entity.User;
 
 import java.util.ArrayList;
@@ -71,6 +73,17 @@ public class APIWrapper extends RetrofitUtil {
 
     public Observable<T4> ChooseSeat(String location,String classroom,String seatnumber,String userid){
         return getmAPIService().ChooseSeat(location, classroom, seatnumber, userid);
+    }
+
+    public Observable<T5> EndUse(String location,String classroom,String seatnumber){
+        return getmAPIService().EndUse(location,classroom,seatnumber);
+    }
+    public Observable<T5> ChangeStatus(String location,String classroom,String seatnumber){
+        return getmAPIService().ChangeStatus(location,classroom,seatnumber);
+    }
+
+    public Observable<MyState> SeeMystate(String userid){
+        return getmAPIService().SeeMystate(userid);
     }
 
 }

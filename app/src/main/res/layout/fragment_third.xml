@@ -1,136 +1,70 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:leon="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.example.desk.ui.third.PerfectArcView
-        android:id="@+id/header_view"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        app:p_arc_showImage="true" />
+    android:orientation="vertical"
+    tools:context=".MainActivity">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:text="齐齐哈尔大学"
-                android:layout_centerInParent="true"
-                />
-        </RelativeLayout>
+        android:layout_height="150dp"
+        android:layout_marginBottom="16dp"
+        android:background="#CDC8B1"
+        android:gravity="center"
+        android:orientation="vertical">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/user_logo"
+            app:civ_border_color="#FFFFFF"
+            app:civ_border_width="2dp" />
+
         <TextView
+            android:id="@+id/tv_xuehao2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="图书馆座位管理系统"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
             android:gravity="center"
-            android:layout_marginTop="60dp"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="版权所有：@IT极客社"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:alpha="0.6"
-            />
-        <!--我的信息 -->
-        <LinearLayout
-            android:id="@+id/lv_1"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="125dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_gravity="left"
-                android:src="@mipmap/seat_01"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
-            <TextView
-                android:text="我的信息"
-                android:gravity="center"
-                android:textSize="22sp"
-                android:textColor="@android:color/black"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
-            <ImageView
-                android:layout_gravity="right|center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/go_right_pressed"/>
-        </LinearLayout>
-        <!--使用记录 -->
-        <LinearLayout
-            android:id="@+id/lv_2"
-            android:gravity="center"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="10dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_gravity="left"
-                android:src="@mipmap/seat_01"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
-            <TextView
-                android:text="使用记录"
-                android:gravity="center"
-                android:textSize="22sp"
-                android:textColor="@android:color/black"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
-            <ImageView
-                android:layout_gravity="right|center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/go_right_pressed"/>
-        </LinearLayout>
-        <!--软件信息 -->
-        <LinearLayout
-            android:id="@+id/lv_3"
-            android:gravity="center"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="10dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_gravity="left"
-                android:src="@mipmap/seat_01"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
-            <TextView
-                android:text="软件信息"
-                android:gravity="center"
-                android:textSize="22sp"
-                android:textColor="@android:color/black"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
-            <ImageView
-                android:layout_gravity="right|center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/go_right_pressed"/>
-        </LinearLayout>
+            android:padding="10dp"
+            android:text="2016021051"
+            android:textSize="16sp" />
     </LinearLayout>
-</FrameLayout>
+
+
+    <com.leon.lib.settingview.LSettingItem
+        android:id="@+id/item_one_myinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        leon:leftIcon="@mipmap/ic_launcher"
+        leon:leftText="我的信息" />
+
+    <com.leon.lib.settingview.LSettingItem
+        android:id="@+id/item_two_myinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        leon:leftIcon="@mipmap/ic_launcher"
+        leon:leftText="当前状态" />
+
+    <com.leon.lib.settingview.LSettingItem
+        android:id="@+id/item_three_myinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        leon:leftIcon="@mipmap/ic_launcher"
+        leon:leftText="暂离座位" />
+
+
+    <com.leon.lib.settingview.LSettingItem
+        android:id="@+id/item_four_myinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        leon:leftIcon="@mipmap/ic_launcher"
+        leon:leftText="结束使用" />
+    <com.leon.lib.settingview.LSettingItem
+        android:id="@+id/item_five_myinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        leon:leftIcon="@mipmap/ic_launcher"
+        leon:leftText="软件信息" />
+</LinearLayout>
