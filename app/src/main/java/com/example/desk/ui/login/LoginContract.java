@@ -11,7 +11,7 @@ import com.example.desk.mvp.BaseView;
 public class LoginContract {
     interface View extends BaseView {
         //在View层回调，根据Presenter逻辑调用
-        void loginSuccess();
+        void loginSuccess(String userid, String userlogo, String passwordd);
         void loginFailed(String message);
     }
 

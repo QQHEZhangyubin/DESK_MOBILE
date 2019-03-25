@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.desk.R;
 import com.example.desk.entity.Seat;
+import com.example.desk.util.TLog;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
         }
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_first_fragment, parent, false);
         final ViewHolder holder = new ViewHolder(view);
-        holder.roomImg.setOnClickListener(new View.OnClickListener() {
+        holder.ivlv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int p = holder.getAdapterPosition();
@@ -59,8 +60,8 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Seat seat = seats.get(position);
-        holder.seatAvaibleAccount.setText(seat.getAvail_seat());
-        holder.seatTotalAccount.setText(seat.getTotal_seat());
+        holder.seatAvaibleAccount.setText("可用座位："+seat.getAvail_seat());
+        holder.seatTotalAccount.setText("位置总数："+seat.getTotal_seat());
         holder.roomId.setText(seat.getRoomid());
     }
 
@@ -72,14 +73,14 @@ public class SeatAdapter extends RecyclerView.Adapter<SeatAdapter.ViewHolder> {
 
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.room_img)
-        ImageView roomImg;
         @BindView(R.id.seat_avaible_account)
         TextView seatAvaibleAccount;
         @BindView(R.id.seat_total_account)
         TextView seatTotalAccount;
         @BindView(R.id.room_id)
         TextView roomId;
+        @BindView(R.id.iv_iv)
+        ImageView ivlv;
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

@@ -9,6 +9,8 @@ import com.example.desk.util.TLog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -25,7 +27,19 @@ public class RoomPresenter extends BasePresenterImpl<RoomContract.View> implemen
     @Override
     public void getDataTwo(String roomid) {
         //TODO:根据roomid获得该自习室所有座位情况
-        APIWrapper.getInstance().QueryEmptySeat("","")
+        String location = null;
+        String classroom = null;
+        deskList.clear();
+        Pattern p = Pattern.compile("[\\u4e00-\\u9fa5]+|\\d+");
+        Matcher m = p.matcher( roomid );
+        if (m.find()){
+           location = m.group();
+        }
+        if (m.find()){
+            classroom = m.group();
+        }
+        TLog.error("location = "+location + ", classroom = " +classroom);
+        APIWrapper.getInstance().QueryEmptySeat(location,classroom)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Desk>>() {
@@ -43,16 +57,18 @@ public class RoomPresenter extends BasePresenterImpl<RoomContract.View> implemen
                     @Override
                     public void onNext(List<Desk> desks) {
                         for (Desk desk : desks){
+                            TLog.error(desk.getClassroom());
                             deskList.add(desk);
                         }
                     }
                 });
     }
 
+
     @Override
-    public void getDataThree(Desk desk) {
-        //TODO:根据点击的具体座位查看座位状态，再决定是否可以抢座
-        APIWrapper.getInstance().ChooseSeat(desk.getLocation(),desk.getClassroom(),desk.getSeatnumber()+"",User.getInstance().getData().getUserid())
+    public void QiangZuo(String rqcode, Desk tempdesk,String userid) {
+        TLog.error("rqcord = =" + rqcode);
+        APIWrapper.getInstance().ChooseSeat(tempdesk.getLocation(),tempdesk.getClassroom(),tempdesk.getSeatnumber()+"",userid,rqcode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<T4>() {
@@ -76,16 +92,5 @@ public class RoomPresenter extends BasePresenterImpl<RoomContract.View> implemen
                         detatil = t4.getDetail();
                     }
                 });
-
-    }
-
-    @Override
-    public void QiangZuo(String rqcode) {
-        if (rqcode.equals("")){
-            //TODO:根据点击的具体座位抢座
-            mView.Success4("座位已抢到手，赶紧开始繁忙的学习生活吧！");//终于抢到位置了
-        }else {
-            mView.ErrorThree("扫描错误的二维码！");
-        }
     }
 }

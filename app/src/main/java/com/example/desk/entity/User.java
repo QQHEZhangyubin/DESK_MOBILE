@@ -1,30 +1,15 @@
 package com.example.desk.entity;
 
 public class User {
-    //双重检查，单例模式
-    private static volatile  User user;
+
+
     /**
-     * data : {"userid":"2016021053","college":"计算机与控制工程学院","password":"50324f72b7d6ea0214a5fde172ee454d","birthday":"1998/10/23","email":"13608428279@163.com","gender":"男","classss":"软件161"}
+     * data : {"userid":"2016021022","college":"外国语学院","classs":"英语135","password":"25f9e794323b453885f5181f1b624d0b","birthday":"1998-10-23","email":"13608428279@163.com","gender":"男","userlogo":null}
      * error_code : 0
      */
 
     private DataBean data;
     private int error_code;
-    public static void  ClearUser(){
-        //清空user对象
-        user = null;
-    }
-    private User(){}
-    public static User getInstance(){
-        if (user == null){
-            synchronized (User.class){
-                if (user == null){
-                    user = new User();
-                }
-            }
-        }
-        return user;
-    }
 
     public DataBean getData() {
         return data;
@@ -44,31 +29,24 @@ public class User {
 
     public static class DataBean {
         /**
-         * userid : 2016021053
-         * college : 计算机与控制工程学院
-         * password : 50324f72b7d6ea0214a5fde172ee454d
-         * birthday : 1998/10/23
+         * userid : 2016021022
+         * college : 外国语学院
+         * classs : 英语135
+         * password : 25f9e794323b453885f5181f1b624d0b
+         * birthday : 1998-10-23
          * email : 13608428279@163.com
          * gender : 男
-         * classss : 软件161
+         * userlogo : null
          */
 
         private String userid;
         private String college;
+        private String classs;
         private String password;
         private String birthday;
         private String email;
         private String gender;
-        private String classss;
         private String userlogo;
-
-        public String getUserlogo() {
-            return userlogo;
-        }
-
-        public void setUserlogo(String userlogo) {
-            this.userlogo = userlogo;
-        }
 
         public String getUserid() {
             return userid;
@@ -84,6 +62,14 @@ public class User {
 
         public void setCollege(String college) {
             this.college = college;
+        }
+
+        public String getClasss() {
+            return classs;
+        }
+
+        public void setClasss(String classs) {
+            this.classs = classs;
         }
 
         public String getPassword() {
@@ -118,12 +104,12 @@ public class User {
             this.gender = gender;
         }
 
-        public String getClassss() {
-            return classss;
+        public String getUserlogo() {
+            return userlogo;
         }
 
-        public void setClassss(String classss) {
-            this.classss = classss;
+        public void setUserlogo(String userlogo) {
+            this.userlogo = userlogo;
         }
     }
 }

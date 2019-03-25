@@ -8,7 +8,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitUtil {
-    private static final String API_HOST = "http://172.16.63.128/desk/";
+    private static final String API_HOST = "http://172.16.63.128:8080/desk/";
     private static Retrofit mRetrofit;
     private static APIService mAPIService;
 

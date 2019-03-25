@@ -2,6 +2,9 @@ package com.example.desk;
 
 import org.junit.Test;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.junit.Assert.*;
 
 /**
@@ -12,6 +15,22 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+        //assertEquals(4, 2 + 2);
+        Pattern p = Pattern.compile("[\\u4e00-\\u9fa5]+|\\d+");
+        Matcher m = p.matcher( "东区401" );
+        if (m.find()){
+            System.out.println(m.group());
+        }
+        if (m.find()){
+            System.out.println(m.group());
+        }
+        //String location = m.group(1);
+        //System.out.println(location);
+        //String classroom = m.group(2);
+       // System.out.println(classroom);
+        //while (m.find()){
+          ///  System.out.println(m.group());
+        //}
+
     }
 }

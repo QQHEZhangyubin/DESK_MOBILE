@@ -23,8 +23,6 @@ public class FirstPresenter extends BasePresenterImpl<FirstContract.View> implem
     private List<Seat> seatList = new ArrayList<>();
     @Override
     public void getSeatData() {
-        //TODO:网络请求服务端，返回每个自习室的id，可用座位，以及总座位
-        mView.Error("请求服务端数据失败！");
         APIWrapper.getInstance().QuerySeatInfo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

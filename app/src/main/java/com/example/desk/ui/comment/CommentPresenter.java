@@ -95,7 +95,7 @@ public class CommentPresenter extends BasePresenterImpl<CommentContract.View> im
 
                     @Override
                     public void onNext(T2 t2) {
-
+                        TLog.error(t2.getReply()+"");
                     }
                 });
     }

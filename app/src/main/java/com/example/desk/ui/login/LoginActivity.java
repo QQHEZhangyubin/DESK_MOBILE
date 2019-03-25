@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +14,8 @@ import com.example.desk.MainActivity;
 import com.example.desk.R;
 import com.example.desk.mvp.MVPBaseActivity;
 import com.example.desk.ui.register.RegisterActivity;
+import com.example.desk.util.ShareUtils;
+import com.example.desk.util.StaticClass;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,7 +71,11 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.View, LoginPres
     }
 
     @Override
-    public void loginSuccess() {
+    public void loginSuccess(String userid, String userlogo, String passwordd) {
+        ShareUtils.deleAll(getApplicationContext());
+        ShareUtils.putString(getApplicationContext(),StaticClass.userid,userid);
+        ShareUtils.putString(getApplicationContext(),StaticClass.userlogo,userlogo);
+        ShareUtils.putString(getApplicationContext(),StaticClass.password,passwordd);
         progressDialog.dismiss();
         btnLogin.setEnabled(true);
         Intent intent = new Intent(LoginActivity.this,MainActivity.class);

@@ -82,6 +82,7 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.View, Reg
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_signup:
+                User user = new User();
                 String uid = inputName.getText().toString();
                 String eamil = inputEmail.getText().toString();
                 String classs = inputClass.getText().toString();
@@ -90,12 +91,10 @@ public class RegisterActivity extends MVPBaseActivity<RegisterContract.View, Reg
                 String college = inputCollege.getText().toString();
                 dataBean.setUserid(uid);
                 dataBean.setBirthday(birhday);
-                dataBean.setClassss(classs);
+                dataBean.setClasss(classs);
                 dataBean.setEmail(eamil);
                 dataBean.setPassword(pwd);
                 dataBean.setCollege(college);
-                User.ClearUser();
-                User user = User.getInstance();
                 user.setData(dataBean);
                 if (!mPresenter.validate(user)) {
                     return;

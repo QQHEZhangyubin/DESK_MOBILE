@@ -29,10 +29,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.desk.R;
 import com.example.desk.entity.MyState;
 import com.example.desk.mvp.MVPBaseFragment;
 import com.example.desk.ui.myinfo.MyinfoActivity;
+import com.example.desk.util.ShareUtils;
+import com.example.desk.util.StaticClass;
 import com.example.desk.util.TLog;
 import com.leon.lib.settingview.LSettingItem;
 
@@ -64,16 +67,10 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
     CircleImageView profileImage;
     @BindView(R.id.tv_xuehao2)
     TextView tvXuehao2;
-    @BindView(R.id.item_one_myinfo)
-    LSettingItem itemOneMyinfo;
-    @BindView(R.id.item_two_myinfo)
-    LSettingItem itemTwoMyinfo;
     @BindView(R.id.item_three_myinfo)
     LSettingItem itemThreeMyinfo;
     @BindView(R.id.item_four_myinfo)
     LSettingItem itemFourMyinfo;
-    @BindView(R.id.item_five_myinfo)
-    LSettingItem itemFiveMyinfo;
     Unbinder unbinder;
 
     private AlertDialog alertDialog;
@@ -103,10 +100,115 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-
         View view = inflater.inflate(R.layout.fragment_third, container, false);
         unbinder = ButterKnife.bind(this, view);
+        String m = ShareUtils.getString(getActivity().getApplicationContext(), StaticClass.userlogo, "0");
+        if (m.equals("0")){
+            Glide.with(getActivity()).load(R.drawable.user_logo).into(profileImage);
+        }else {
+            Glide.with(getActivity()).load(m).into(profileImage);
+        }
+
+        String username =  ShareUtils.getString(getActivity().getApplicationContext(),StaticClass.userid,"*********");
+        tvXuehao2.setText(username);
+        LSettingItem five = view.findViewById(R.id.item_five_myinfo);
+        five.setmOnLSettingItemClick(new LSettingItem.OnLSettingItemClick() {
+            @Override
+            public void click() {
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                builder2.setTitle("软件说明");
+                builder2.setMessage("***************************************************************************************************************");
+                builder2.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                    }
+                });
+                alertDialog = builder2.create();
+                alertDialog.show();
+            }
+        });
+        LSettingItem first = view.findViewById(R.id.item_one_myinfo);
+        first.setmOnLSettingItemClick(new LSettingItem.OnLSettingItemClick() {
+            @Override
+            public void click() {
+                startActivity(new Intent(getActivity(),MyinfoActivity.class));
+            }
+        });
+        LSettingItem second = view.findViewById(R.id.item_two_myinfo);
+        second.setmOnLSettingItemClick(new LSettingItem.OnLSettingItemClick() {
+            @Override
+            public void click() {
+                //当前状态
+                String userid = ShareUtils.getString(getActivity().getApplicationContext(), StaticClass.userid, "");
+                mPresenter.Seemystate(userid);
+            }
+        });
+        LSettingItem third = view.findViewById(R.id.item_three_myinfo);
+        third.setmOnLSettingItemClick(new LSettingItem.OnLSettingItemClick() {
+            @Override
+            public void click() {
+                //暂离
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+                builder1.setTitle("暂离座位");
+                builder1.setMessage("确定暂离座位？");
+                builder1.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                        progressDialog = new ProgressDialog(getActivity());
+                        progressDialog.setTitle("暂离座位");
+                        progressDialog.setMessage("等待中...");
+                        progressDialog.setIndeterminate(true);
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+                        String userid = ShareUtils.getString(getActivity().getApplicationContext(), StaticClass.userid, "");
+                        mPresenter.changestatus(userid);//向服务器发送数据，userid
+                    }
+                });
+                builder1.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                    }
+                });
+                alertDialog = builder1.create();
+                alertDialog.show();
+            }
+        });
+
+        LSettingItem four = view.findViewById(R.id.item_four_myinfo);
+        four.setmOnLSettingItemClick(new LSettingItem.OnLSettingItemClick() {
+            @Override
+            public void click() {
+                //结束
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("结束使用");
+                builder.setMessage("确定结束使用？");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                        progressDialog = new ProgressDialog(getActivity());
+                        progressDialog.setTitle("结束使用");
+                        progressDialog.setMessage("等待中...");
+                        progressDialog.setIndeterminate(true);
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+                        String userid = ShareUtils.getString(getActivity().getApplicationContext(), StaticClass.userid, "");
+                        mPresenter.enduse(userid);//向服务器发送数据，
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                    }
+                });
+                alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
         return view;
     }
 
@@ -114,10 +216,9 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-
     }
 
-    @OnClick({R.id.profile_image, R.id.item_one_myinfo, R.id.item_two_myinfo, R.id.item_three_myinfo, R.id.item_four_myinfo, R.id.item_five_myinfo})
+    @OnClick({R.id.profile_image})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.profile_image:
@@ -136,80 +237,6 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
                 lp.y = 20;
                 dialogWindow.setAttributes(lp);
                 dialog.show();
-                break;
-            case R.id.item_one_myinfo:
-                startActivity(new Intent(getActivity(),MyinfoActivity.class));
-                break;
-            case R.id.item_two_myinfo:
-                //当前状态
-                mPresenter.Seemystate();
-                break;
-            case R.id.item_three_myinfo:
-                //暂离
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-                builder1.setTitle("暂离座位");
-                builder1.setMessage("确定暂离座位？");
-                builder1.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
-                        progressDialog = new ProgressDialog(getActivity());
-                        progressDialog.setTitle("暂离座位");
-                        progressDialog.setMessage("等待中...");
-                        progressDialog.setIndeterminate(true);
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
-                        mPresenter.changestatus();//向服务器发送数据，location，classroom，seatnumber
-                    }
-                });
-                builder1.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog = builder1.create();
-                alertDialog.show();
-                break;
-            case R.id.item_four_myinfo:
-                //结束
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("结束使用");
-                builder.setMessage("确定结束使用？");
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
-                        progressDialog = new ProgressDialog(getActivity());
-                        progressDialog.setTitle("结束使用");
-                        progressDialog.setMessage("等待中...");
-                        progressDialog.setIndeterminate(true);
-                        progressDialog.setCancelable(false);
-                        progressDialog.show();
-                        mPresenter.enduse();//向服务器发送数据，location，classroom，seatnumber
-                    }
-                });
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog = builder.create();
-                alertDialog.show();
-                break;
-            case R.id.item_five_myinfo:
-                AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
-                builder2.setTitle("软件说明");
-                builder2.setMessage("***************************************************************************************************************");
-                builder2.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog = builder2.create();
-                alertDialog.show();
                 break;
         }
     }
@@ -239,6 +266,18 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
         });
         alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void Touixiangsuccess(String uploadtouxiangmessage) {
+        Bitmap photo =BitmapFactory.decodeFile(mFile);
+        profileImage.setImageBitmap(photo);
+        Toast.makeText(getActivity(),uploadtouxiangmessage,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void Touxiangfail(String failmessage) {
+        Toast.makeText(getActivity(),failmessage,Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -328,8 +367,7 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
                 if (intent != null) {
                     // 让刚才选择裁剪得到的图片显示在界面上
                     //TODO:得到的mFile可能为空，拿到后需要传给服务端
-                    Bitmap photo =BitmapFactory.decodeFile(mFile);
-                    profileImage.setImageBitmap(photo);
+                    mPresenter.UploadTouxiang(mFile);
                 } else {
                     Log.e("data","data为空");
                 }

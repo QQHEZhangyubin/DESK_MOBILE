@@ -3,7 +3,7 @@ package com.example.desk.entity;
 public class T3 {
 
     /**
-     * 测试用户注册的实体
+     * 测试用户注册和用户上传头像的实体
      * message : existed
      */
 

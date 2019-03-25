@@ -13,6 +13,7 @@ import com.example.desk.entity.T2;
 import com.example.desk.entity.T3;
 import com.example.desk.entity.T4;
 import com.example.desk.entity.T5;
+import com.example.desk.entity.U2;
 import com.example.desk.entity.User;
 
 import java.util.ArrayList;
@@ -71,19 +72,26 @@ public class APIWrapper extends RetrofitUtil {
         return getmAPIService().QueryEmptySeat(location, classroom);
     }
 
-    public Observable<T4> ChooseSeat(String location,String classroom,String seatnumber,String userid){
-        return getmAPIService().ChooseSeat(location, classroom, seatnumber, userid);
+    public Observable<T4> ChooseSeat(String location,String classroom,String seatnumber,String userid,String rqcord){
+        return getmAPIService().ChooseSeat(location, classroom, seatnumber, userid,rqcord);
     }
 
-    public Observable<T5> EndUse(String location,String classroom,String seatnumber){
-        return getmAPIService().EndUse(location,classroom,seatnumber);
+    public Observable<T5> EndUse(String userid){
+        return getmAPIService().EndUse(userid);
     }
-    public Observable<T5> ChangeStatus(String location,String classroom,String seatnumber){
-        return getmAPIService().ChangeStatus(location,classroom,seatnumber);
+    public Observable<T5> ChangeStatus(String userid){
+        return getmAPIService().ChangeStatus(userid);
     }
 
     public Observable<MyState> SeeMystate(String userid){
         return getmAPIService().SeeMystate(userid);
     }
 
+    public Observable<U2> SeeMe(String userid){
+        return getmAPIService().SeeMe(userid);
+    }
+
+    public Observable<T3> uploadTouxiangImgs(MultipartBody.Part file,String userid){
+        return getmAPIService().uploadTouxiangImgs(file,userid);
+    }
 }

@@ -29,7 +29,7 @@ public class RegisterPresenter extends BasePresenterImpl<RegisterContract.View> 
             mView.erroremail("没有选择性别");
             valid = false;
         }
-        if (!databean.getUserid().isEmpty() && !databean.getCollege().isEmpty() && !databean.getClassss().isEmpty()
+        if (!databean.getUserid().isEmpty() && !databean.getCollege().isEmpty() && !databean.getClasss().isEmpty()
                 && !databean.getBirthday().isEmpty() && !databean.getEmail().isEmpty() && !databean.getPassword().isEmpty()
                 ){
             if (!Patterns.EMAIL_ADDRESS.matcher(databean.getEmail()).matches()){
@@ -50,7 +50,7 @@ public class RegisterPresenter extends BasePresenterImpl<RegisterContract.View> 
     @Override
     public void register(final User user) {
         User.DataBean dataBean = user.getData();
-        APIWrapper.getInstance().registeruser(dataBean.getUserid(),dataBean.getPassword(),dataBean.getCollege(),dataBean.getClassss()
+        APIWrapper.getInstance().registeruser(dataBean.getUserid(),dataBean.getPassword(),dataBean.getCollege(),dataBean.getClasss()
         ,dataBean.getBirthday(),dataBean.getEmail(),dataBean.getGender())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

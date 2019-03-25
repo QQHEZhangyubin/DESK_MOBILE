@@ -14,11 +14,16 @@ public class ThirdContract {
         void EndUseResult(String change1);
         void ChangeStatus(String change1);
         void SeeMyState(MyState myState);
+
+        void Touixiangsuccess(String uploadtouxiangmessage);
+
+        void Touxiangfail(String failmessage);
     }
 
     interface  Presenter extends BasePresenter<View> {
-        void enduse();
-        void changestatus();
-        void Seemystate();
+        void enduse(String userid);
+        void changestatus(String userid);
+        void Seemystate(String userid);
+        void UploadTouxiang(String filepath);
     }
 }

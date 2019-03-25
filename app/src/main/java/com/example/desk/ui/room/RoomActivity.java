@@ -20,6 +20,8 @@ import com.example.desk.R;
 import com.example.desk.adapter.DeskAdapter;
 import com.example.desk.entity.Desk;
 import com.example.desk.mvp.MVPBaseActivity;
+import com.example.desk.util.ShareUtils;
+import com.example.desk.util.StaticClass;
 import com.example.qrcode.Constant;
 import com.example.qrcode.ScannerActivity;
 
@@ -83,20 +85,10 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
     public void ErrorTwo(String error) {
         Toast.makeText(RoomActivity.this,error,Toast.LENGTH_SHORT).show();
     }
-    //未知错误
-    @Override
-    public void ErrorThree(String error) {
-        Toast.makeText(RoomActivity.this,error,Toast.LENGTH_SHORT).show();
-    }
-
     //成功抢到该座位
     @Override
     public void Success2(String info) {
-        //该座位可以被抢，扫描二维码之后开抢
-       // Toast.makeText(RoomActivity.this,info,Toast.LENGTH_SHORT).show();
-        //onRestart();
-        Intent intent = new Intent(RoomActivity.this,ScannerActivity.class);
-        startActivityForResult(intent,RESULT_REQUEST_CODE);
+        Toast.makeText(RoomActivity.this,info,Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -105,7 +97,14 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
         DeskAdapter.Two two = new DeskAdapter.Two() {
             @Override
             public void RequestDesk(Desk desk) {
-                mPresenter.getDataThree(desk);
+                if (desk.getState().equals("c")){
+                    tempdesk = desk;
+                    Intent intent = new Intent(RoomActivity.this,ScannerActivity.class);
+                    startActivityForResult(intent,RESULT_REQUEST_CODE);
+                }else {
+                    Toast.makeText(RoomActivity.this,"当前位置不可选择",Toast.LENGTH_SHORT).show();
+                }
+
             }
         };
         StaggeredGridLayoutManager layoutManager=new StaggeredGridLayoutManager
@@ -116,14 +115,7 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
         recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    public void Success4(String s) {
-        //TODO:设计一个弹出的对话框
-        Toast.makeText(RoomActivity.this,s,Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(RoomActivity.this,MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -134,7 +126,8 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
                         return;
                     }
                     String content = data.getStringExtra(Constant.EXTRA_RESULT_CONTENT);//得到扫描的二维码data
-                    mPresenter.QiangZuo(content);//根据二维码data，具体desk data抢座位
+                    String userid = ShareUtils.getString(getApplicationContext(), StaticClass.userid, "");
+                    mPresenter.QiangZuo(content,tempdesk,userid);//根据二维码data，具体desk data抢座位
                     break;
                 default:
                     break;

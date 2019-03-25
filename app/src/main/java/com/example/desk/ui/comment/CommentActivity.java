@@ -35,6 +35,8 @@ import com.example.desk.entity.CommentBean;
 import com.example.desk.entity.CommentDetailBean;
 import com.example.desk.entity.ReplyDetailBean;
 import com.example.desk.mvp.MVPBaseActivity;
+import com.example.desk.util.ShareUtils;
+import com.example.desk.util.StaticClass;
 import com.example.desk.util.TLog;
 import com.example.desk.view.CommentExpandableListView;
 import com.google.gson.Gson;
@@ -169,7 +171,8 @@ public class CommentActivity extends MVPBaseActivity<CommentContract.View, Comme
                 String replyContent = commentText.getText().toString().trim();
                 if (!TextUtils.isEmpty(replyContent)) {
                     dialog.dismiss();
-                    mPresenter.AddReply("2017021234",replyContent,commentDetailBeanList.get(groupPosition).getId()+"",groupPosition);
+                    String userID = ShareUtils.getString(getApplicationContext(),StaticClass.userid,"**********");
+                    mPresenter.AddReply(userID,replyContent,commentDetailBeanList.get(groupPosition).getId()+"",groupPosition);
                 } else {
                     Toast.makeText(CommentActivity.this, "回复内容不能为空", Toast.LENGTH_SHORT).show();
                 }
@@ -240,7 +243,8 @@ public class CommentActivity extends MVPBaseActivity<CommentContract.View, Comme
 
                     //commentOnWork(commentContent);
                     dialog.dismiss();
-                    mPresenter.AddComment("2016021051",brower,commentContent);
+                    String userId = ShareUtils.getString(getApplicationContext(),StaticClass.userid,"**********");
+                    mPresenter.AddComment(userId,brower,commentContent);
 
                 } else {
                     Toast.makeText(CommentActivity.this, "评论内容不能为空", Toast.LENGTH_SHORT).show();

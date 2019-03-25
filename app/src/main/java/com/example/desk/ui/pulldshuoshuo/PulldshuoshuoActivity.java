@@ -229,7 +229,6 @@ public class PulldshuoshuoActivity extends MVPBaseActivity<PulldshuoshuoContract
                     });
         } else {// 点击图片删除
             nAlertDialog.showAlertDialog("提示", "是否删除此图片？", "确定", "取消", new DialogInterface.OnClickListener() {
-
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     lists.remove(position);

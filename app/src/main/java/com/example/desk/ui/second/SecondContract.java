@@ -15,8 +15,6 @@ public class SecondContract {
     interface View extends BaseView {
 
         void Fail1();//从服务器拉取不到说说内容
-
-
         void Success1(ArrayList<ShuoShuo> shuoShuoList);//从服务器拉取成功拉取说说内容
     }
 
