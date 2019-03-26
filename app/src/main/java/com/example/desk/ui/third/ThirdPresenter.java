@@ -7,6 +7,7 @@ import com.example.desk.entity.MyState;
 import com.example.desk.entity.T3;
 import com.example.desk.entity.T5;
 import com.example.desk.mvp.BasePresenterImpl;
+import com.example.desk.util.StaticClass;
 import com.example.desk.util.TLog;
 
 import java.io.File;
@@ -101,30 +102,57 @@ public class ThirdPresenter extends BasePresenterImpl<ThirdContract.View> implem
     }
 
     @Override
-    public void UploadTouxiang(String filepath) {
+    public void UploadTouxiang(String filepath,String userid) {
+        TLog.error("filepath == " + filepath);
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         File file = new File(filepath);
         RequestBody r = RequestBody.create(MediaType.parse("image/png"), file);
-        builder.addFormDataPart("touxiang",file.getName(),r);
+        builder.addFormDataPart(StaticClass.UploadTouxiang,file.getName(),r);
         MultipartBody.Part p = builder.build().part(0);
-        APIWrapper.getInstance().uploadTouxiangImgs(p,"")
+        APIWrapper.getInstance().uploadTouxiangImgs(p,userid)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<T3>() {
                     @Override
                     public void onCompleted() {
+                        TLog.error("成功");
                         mView.Touixiangsuccess(uploadtouxiangmessage);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        TLog.error(e.getMessage());
                         mView.Touxiangfail(uploadtouxiangmessage);
-
                     }
 
                     @Override
                     public void onNext(T3 t3) {
+                        TLog.error("上传结果：：：" + t3.getMessage());
                         uploadtouxiangmessage = t3.getMessage();
+                    }
+                });
+    }
+
+    @Override
+    public void changestatus2(String userid) {
+        //恢复座位
+        APIWrapper.getInstance().JieshuZanli(userid)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<T5>() {
+                    @Override
+                    public void onCompleted() {
+                        mView.JIESHUZANLISUCCESS();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.FAILZANLI();
+                    }
+
+                    @Override
+                    public void onNext(T5 t5) {
+
                     }
                 });
     }

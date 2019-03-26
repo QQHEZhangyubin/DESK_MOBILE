@@ -7,6 +7,7 @@ import com.example.desk.entity.Desk;
 import com.example.desk.entity.MyState;
 import com.example.desk.entity.Seat;
 import com.example.desk.entity.ShuoShuo;
+import com.example.desk.entity.Status;
 import com.example.desk.entity.T1;
 import com.example.desk.entity.T2;
 import com.example.desk.entity.T3;
@@ -44,8 +45,8 @@ public interface APIService {
     Observable<T2> AddReply(@Query("userid") String userid, @Query("replyContent") String replyContent, @Query("replyComId") String replyComId);
     //发表说说
     @Multipart
-    @POST("imgs/upload")
-    Observable<String> uploadImgs(@Part List<MultipartBody.Part> file, @Query("data2") String data);
+    @POST("upload")
+    Observable<Status> uploadImgs(@Part List<MultipartBody.Part> file, @Query("data2") String data, @Query("userid") String userid);
 
     @POST("doRegister")
     Observable<T3> registeruser(@Query("userid") String userid,@Query("password") String password,@Query("college") String college,@Query("classs") String classs,@Query("birthday") String birthday,@Query("email") String email,@Query("gender") String gender);
@@ -67,6 +68,9 @@ public interface APIService {
     @POST("seat/changestatus")
     Observable<T5> ChangeStatus(@Query("userid") String userid);
 
+    @POST("seat/jieshuzanli")
+    Observable<T5> JieshuZanli(@Query("userid") String userid);
+
     @POST("seat/seemystate")
     Observable<MyState> SeeMystate(@Query("userid") String userid);
 
@@ -74,6 +78,6 @@ public interface APIService {
     Observable<U2> SeeMe(@Query("userid") String userid);
     //上传头像
     @Multipart
-    @POST("imgs/uploadtouxiang")
+    @POST("uploadtouxiang")
     Observable<T3> uploadTouxiangImgs(@Part MultipartBody.Part file, @Query("userid") String userid);
 }

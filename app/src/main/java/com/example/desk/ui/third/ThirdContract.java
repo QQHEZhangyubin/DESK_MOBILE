@@ -18,12 +18,17 @@ public class ThirdContract {
         void Touixiangsuccess(String uploadtouxiangmessage);
 
         void Touxiangfail(String failmessage);
+
+        void JIESHUZANLISUCCESS();
+
+        void FAILZANLI();
     }
 
     interface  Presenter extends BasePresenter<View> {
         void enduse(String userid);
         void changestatus(String userid);
         void Seemystate(String userid);
-        void UploadTouxiang(String filepath);
+        void UploadTouxiang(String filepath,String userid);
+        void  changestatus2(String userid);
     }
 }

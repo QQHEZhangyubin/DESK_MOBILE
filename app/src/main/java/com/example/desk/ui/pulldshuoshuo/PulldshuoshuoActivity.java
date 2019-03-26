@@ -25,6 +25,8 @@ import com.example.desk.mvp.MVPBaseActivity;
 import com.example.desk.util.FileUtils;
 import com.example.desk.util.ImageTools;
 import com.example.desk.util.NAlertDialog;
+import com.example.desk.util.ShareUtils;
+import com.example.desk.util.StaticClass;
 import com.example.desk.util.TLog;
 
 import java.io.File;
@@ -87,17 +89,21 @@ public class PulldshuoshuoActivity extends MVPBaseActivity<PulldshuoshuoContract
     public void FabiaoSuccess() {
         //发表说说成功
         Toast.makeText(PulldshuoshuoActivity.this,"发布成功",Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     @Override
     public void FabiaoFail() {
         //发表说说失败
         Toast.makeText(PulldshuoshuoActivity.this,"发布失败",Toast.LENGTH_SHORT).show();
+        finish();
     }
-
     /**
+     *
      * 从图库中选取图片
+     *
      */
+
     private void selectImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -107,10 +113,7 @@ public class PulldshuoshuoActivity extends MVPBaseActivity<PulldshuoshuoContract
 
     /**
      * 拍照照片存放的路径
-     *
      * @param
-     *
-     *
      */
     private void captureImage(String sdpath) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -187,13 +190,14 @@ public class PulldshuoshuoActivity extends MVPBaseActivity<PulldshuoshuoContract
         String text = etText.getText().toString();
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for (int i = 0; i <list_path.size() ; i++) {
-            TLog.log(list_path.get(i));
+            TLog.error(list_path.get(i));
             File file = new File(list_path.get(i));
             RequestBody phototRequestBody = RequestBody.create(MediaType.parse("image/png"), file);
-            builder.addFormDataPart("file2",file.getName(),phototRequestBody);
+            builder.addFormDataPart(StaticClass.FabiaoShuoShuo,file.getName(),phototRequestBody);
         }
         List<MultipartBody.Part> parts = builder.build().parts();
-        mPresenter.FabiaoShuoShuo(parts,text);
+        String username = ShareUtils.getString(getApplicationContext(), StaticClass.userid, "");
+        mPresenter.FabiaoShuoShuo(parts,text,username);
     }
     @Override
     protected void onDestroy() {

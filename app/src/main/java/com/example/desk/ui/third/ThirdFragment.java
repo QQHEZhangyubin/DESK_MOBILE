@@ -54,7 +54,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import static android.support.v4.media.MediaBrowserServiceCompat.RESULT_OK;
+import static android.app.Activity.RESULT_OK;
+
 
 /**
  * MVPPlugin
@@ -97,20 +98,53 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
         return thirdFragment;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_third, container, false);
         unbinder = ButterKnife.bind(this, view);
         String m = ShareUtils.getString(getActivity().getApplicationContext(), StaticClass.userlogo, "0");
-        if (m.equals("0")){
-            Glide.with(getActivity()).load(R.drawable.user_logo).into(profileImage);
-        }else {
-            Glide.with(getActivity()).load(m).into(profileImage);
-        }
+        TLog.error("图片地址：" + m);
+        boolean fl = false;
+        if (m.startsWith("http")){
 
+            Glide.with(getActivity()).load(m).into(profileImage);
+            fl = true;
+        }
+        if (m.equals("0")){
+
+            Glide.with(getActivity()).load(R.drawable.user_logo).into(profileImage);
+            fl = true;
+        }
+        if (!fl){
+
+            Bitmap photo =BitmapFactory.decodeFile(m);
+           // String tmpfile = mFile;
+            profileImage.setImageBitmap(photo);
+           // File filename = new File(m);
+            //Glide.with(getActivity()).load(filename).into(profileImage);
+        }
         String username =  ShareUtils.getString(getActivity().getApplicationContext(),StaticClass.userid,"*********");
         tvXuehao2.setText(username);
+        LSettingItem threeAgain = view.findViewById(R.id.item_three_again_myinfo);
+        threeAgain.setmOnLSettingItemClick(new LSettingItem.OnLSettingItemClick() {
+            @Override
+            public void click() {
+                progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setTitle("恢复座位");
+                progressDialog.setMessage("等待中...");
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                String userid = ShareUtils.getString(getActivity().getApplicationContext(), StaticClass.userid, "");
+                mPresenter.changestatus2(userid);//向服务器发送数据，userid
+            }
+        });
         LSettingItem five = view.findViewById(R.id.item_five_myinfo);
         five.setmOnLSettingItemClick(new LSettingItem.OnLSettingItemClick() {
             @Override
@@ -271,13 +305,30 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
     @Override
     public void Touixiangsuccess(String uploadtouxiangmessage) {
         Bitmap photo =BitmapFactory.decodeFile(mFile);
+        String tmpfile = mFile;
         profileImage.setImageBitmap(photo);
+
+        ShareUtils.deleShare(getActivity().getApplicationContext(),StaticClass.userlogo);
+        ShareUtils.putString(getActivity().getApplicationContext(),StaticClass.userlogo,tmpfile);
+
         Toast.makeText(getActivity(),uploadtouxiangmessage,Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void Touxiangfail(String failmessage) {
         Toast.makeText(getActivity(),failmessage,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void JIESHUZANLISUCCESS() {
+        progressDialog.dismiss();
+        Toast.makeText(getActivity(),"结束暂离成功",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void FAILZANLI() {
+        progressDialog.dismiss();
+        Toast.makeText(getActivity(),"结束暂离失败",Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -366,14 +417,13 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
             case CROP_SMALL_PICTURE:  //调用剪裁后返回
                 if (intent != null) {
                     // 让刚才选择裁剪得到的图片显示在界面上
-                    //TODO:得到的mFile可能为空，拿到后需要传给服务端
-                    mPresenter.UploadTouxiang(mFile);
+                    String userid = ShareUtils.getString(getActivity().getApplicationContext(),StaticClass.userid,"");
+                    mPresenter.UploadTouxiang(mFile,userid);
                 } else {
                     Log.e("data","data为空");
                 }
                 break;
         }
-
     }
 
     private void startPhotoZoom(Uri uri) {

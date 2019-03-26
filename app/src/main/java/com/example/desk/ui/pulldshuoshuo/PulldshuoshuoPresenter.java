@@ -3,6 +3,7 @@ package com.example.desk.ui.pulldshuoshuo;
 import android.content.Context;
 
 import com.example.desk.api.APIWrapper;
+import com.example.desk.entity.Status;
 import com.example.desk.mvp.BasePresenterImpl;
 import com.example.desk.util.TLog;
 
@@ -21,11 +22,11 @@ import rx.schedulers.Schedulers;
 public class PulldshuoshuoPresenter extends BasePresenterImpl<PulldshuoshuoContract.View> implements PulldshuoshuoContract.Presenter{
 
     @Override
-    public void FabiaoShuoShuo(List<MultipartBody.Part> file, String data) {
-        APIWrapper.getInstance().uploadImgs(file,data)
+    public void FabiaoShuoShuo(List<MultipartBody.Part> file, String data,String username) {
+        APIWrapper.getInstance().uploadImgs(file,data,username)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<String>() {
+                .subscribe(new Subscriber<Status>() {
                     @Override
                     public void onCompleted() {
                         mView.FabiaoSuccess();
@@ -38,8 +39,8 @@ public class PulldshuoshuoPresenter extends BasePresenterImpl<PulldshuoshuoContr
                     }
 
                     @Override
-                    public void onNext(String s) {
-                        TLog.error("onNext " + s);
+                    public void onNext(Status s) {
+                        TLog.error("onNext " + s.getStatus());
                     }
                 });
     }

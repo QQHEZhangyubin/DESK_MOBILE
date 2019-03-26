@@ -55,7 +55,6 @@ public class SecondFragment extends MVPBaseFragment<SecondContract.View, SecondP
         View view = inflater.inflate(R.layout.fragment_second, container, false);
         unbinder = ButterKnife.bind(this, view);
         mPresenter.initData2();//请求网络数据
-        //setSupportActionBar(toolbar2);
         return view;
     }
 
@@ -74,7 +73,6 @@ public class SecondFragment extends MVPBaseFragment<SecondContract.View, SecondP
     @Override
     public void Success1(ArrayList<ShuoShuo> shuoShuoList) {
         //从服务器拉取成功拉取说说内容
-        Toast.makeText(getContext(), "拉取说说内容成功", Toast.LENGTH_SHORT).show();
         RecyclerItemAdapter.OnPlayClickListener onPlayClickListener = new RecyclerItemAdapter.OnPlayClickListener() {
             @Override
             public void onItemClick(ShuoShuo shuo) {
@@ -91,7 +89,6 @@ public class SecondFragment extends MVPBaseFragment<SecondContract.View, SecondP
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerview.setLayoutManager(layoutManager);
-        //TLog.log(shuoShuoList.size()+"");
         RecyclerItemAdapter adapter = new RecyclerItemAdapter(getActivity(), shuoShuoList);
         adapter.setOnplayClickListener(onPlayClickListener);
         recyclerview.setAdapter(adapter);

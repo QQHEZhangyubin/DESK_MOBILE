@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -21,7 +22,6 @@
             android:src="@drawable/user_logo"
             app:civ_border_color="#FFFFFF"
             app:civ_border_width="2dp" />
-
         <TextView
             android:id="@+id/tv_xuehao2"
             android:layout_width="match_parent"
@@ -32,39 +32,40 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-
     <com.leon.lib.settingview.LSettingItem
         android:id="@+id/item_one_myinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        leon:leftIcon="@mipmap/ic_launcher"
+        leon:leftIcon="@mipmap/x_bookmark_user37"
         leon:leftText="我的信息" />
-
     <com.leon.lib.settingview.LSettingItem
         android:id="@+id/item_two_myinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        leon:leftIcon="@mipmap/ic_launcher"
+        leon:leftIcon="@mipmap/x_chair"
         leon:leftText="当前状态" />
-
     <com.leon.lib.settingview.LSettingItem
         android:id="@+id/item_three_myinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        leon:leftIcon="@mipmap/ic_launcher"
+        leon:leftIcon="@mipmap/x_clock01"
         leon:leftText="暂离座位" />
-
-
+    <com.leon.lib.settingview.LSettingItem
+        android:id="@+id/item_three_again_myinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        leon:leftIcon="@mipmap/x_coffee"
+        leon:leftText="暂离结束" />
     <com.leon.lib.settingview.LSettingItem
         android:id="@+id/item_four_myinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        leon:leftIcon="@mipmap/ic_launcher"
+        leon:leftIcon="@mipmap/x_night"
         leon:leftText="结束使用" />
     <com.leon.lib.settingview.LSettingItem
         android:id="@+id/item_five_myinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        leon:leftIcon="@mipmap/ic_launcher"
+        leon:leftIcon="@mipmap/x_channels"
         leon:leftText="软件信息" />
 </LinearLayout>

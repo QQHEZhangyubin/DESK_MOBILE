@@ -58,17 +58,7 @@ public class RecyclerItemAdapter extends RecyclerView.Adapter<RecyclerItemAdapte
         holder.tvContent.setText(shuo.getContent());
         holder.tvScanner.setText(shuo.getBrowser());
         holder.tvTime.setText(shuo.getTime());
-        // 使用ImageLoader加载网络图片
-        /*
-        DisplayImageOptions options = new DisplayImageOptions.Builder()//
-                .showImageOnLoading(R.mipmap.ic_launcher) // 加载中显示的默认图片
-                .showImageOnFail(R.mipmap.ic_launcher) // 设置加载失败的默认图片
-                .cacheInMemory(true) // 内存缓存
-                .cacheOnDisk(true) // sdcard缓存
-                .bitmapConfig(Bitmap.Config.RGB_565)// 设置最低配置
-                .build();//
-        ImageLoader.getInstance().displayImage(shuo.getPicture(),holder.ivAvatar,options);
-        */
+
         Glide.with(mContext).load(shuo.getPicture()).into(holder.ivAvatar);
         final ArrayList<String> imageUrls = shuo.getEpicture();
         if (imageUrls == null || imageUrls.size() == 0){

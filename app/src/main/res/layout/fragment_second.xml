@@ -19,10 +19,11 @@
             android:textSize="22sp"/>
         <ImageButton
             android:id="@+id/ib_c"
+            android:background="@color/white"
             android:layout_alignParentRight="true"
-            android:src="@mipmap/icon_addpic_focused"
-            android:layout_width="22dp"
-            android:layout_height="22dp" />
+            android:src="@mipmap/x_cam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:layout_below="@id/lll"

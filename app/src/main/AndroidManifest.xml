@@ -7,9 +7,9 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/seat_06"
+        android:icon="@mipmap/icon_11"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/seat_06"
+        android:roundIcon="@mipmap/icon_11"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"

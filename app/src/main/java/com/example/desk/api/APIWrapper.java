@@ -8,6 +8,7 @@ import com.example.desk.entity.Desk;
 import com.example.desk.entity.MyState;
 import com.example.desk.entity.Seat;
 import com.example.desk.entity.ShuoShuo;
+import com.example.desk.entity.Status;
 import com.example.desk.entity.T1;
 import com.example.desk.entity.T2;
 import com.example.desk.entity.T3;
@@ -52,8 +53,8 @@ public class APIWrapper extends RetrofitUtil {
     public Observable<T2> AddReply(String userid, String replyContent, String replyComId){
         return getmAPIService().AddReply(userid,replyContent,replyComId);
     }
-    public Observable<String> uploadImgs(List<MultipartBody.Part> file, String data){
-        return getmAPIService().uploadImgs(file,data);
+    public Observable<Status> uploadImgs(List<MultipartBody.Part> file, String data, String userid){
+        return getmAPIService().uploadImgs(file,data,userid);
     }
 
     public Observable<T3> registeruser(String userid,String password,String college,String classs,String birthday,String email,String gender){
@@ -93,5 +94,8 @@ public class APIWrapper extends RetrofitUtil {
 
     public Observable<T3> uploadTouxiangImgs(MultipartBody.Part file,String userid){
         return getmAPIService().uploadTouxiangImgs(file,userid);
+    }
+    public Observable<T5> JieshuZanli(String userid){
+        return getmAPIService().JieshuZanli(userid);
     }
 }
