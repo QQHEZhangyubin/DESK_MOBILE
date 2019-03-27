@@ -11,4 +11,5 @@ public class StaticClass {
    public static final int HANDLER_SPLASH = 1001;
    public static final String UploadTouxiang = "touxiangfile";
    public static final String FabiaoShuoShuo = "file2";
+   public static final String Keeppass = "keeppass";
 }

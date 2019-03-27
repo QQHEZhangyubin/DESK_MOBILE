@@ -57,6 +57,10 @@ public class APIWrapper extends RetrofitUtil {
         return getmAPIService().uploadImgs(file,data,userid);
     }
 
+    public Observable<Status> uploadImgsT(String data,String userid){
+        return getmAPIService().uploadImgsT(data,userid);
+    }
+
     public Observable<T3> registeruser(String userid,String password,String college,String classs,String birthday,String email,String gender){
         return getmAPIService().registeruser(userid,password,college,classs,birthday,email,gender);
     }
@@ -92,7 +96,7 @@ public class APIWrapper extends RetrofitUtil {
         return getmAPIService().SeeMe(userid);
     }
 
-    public Observable<T3> uploadTouxiangImgs(MultipartBody.Part file,String userid){
+    public Observable<Status> uploadTouxiangImgs(MultipartBody.Part file,String userid){
         return getmAPIService().uploadTouxiangImgs(file,userid);
     }
     public Observable<T5> JieshuZanli(String userid){

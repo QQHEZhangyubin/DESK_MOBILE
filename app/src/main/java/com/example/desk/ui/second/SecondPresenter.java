@@ -23,7 +23,6 @@ import rx.schedulers.Schedulers;
 
 public class SecondPresenter extends BasePresenterImpl<SecondContract.View> implements SecondContract.Presenter{
     private ArrayList<ShuoShuo> shuoShuoList = new ArrayList<>();
-
     @Override
     public void initData2() {
         APIWrapper.getInstance().RequestData()
@@ -43,10 +42,7 @@ public class SecondPresenter extends BasePresenterImpl<SecondContract.View> impl
 
                     @Override
                     public void onNext(ArrayList<ShuoShuo> shuoShuos) {
-                        for (ShuoShuo s : shuoShuos) {
-                            TLog.log("1111111" + s.getBrowser() + "," + s.getUserName() + "," + s.getPicture() + "," + s.getEpicture().get(0) + "," + s.getContent());
-                            shuoShuoList.add(s);
-                        }
+                        shuoShuoList = shuoShuos;
                     }
                 });
     }

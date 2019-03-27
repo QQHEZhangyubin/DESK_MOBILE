@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,10 +41,8 @@ import com.example.desk.util.TLog;
 import com.leon.lib.settingview.LSettingItem;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import butterknife.BindView;
@@ -265,11 +264,14 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
                 takePhoto.setOnClickListener(this);
                 cancel.setOnClickListener(this);
                 dialog.setContentView(inflate);
+
                 Window dialogWindow = dialog.getWindow();
                 dialogWindow.setGravity( Gravity.BOTTOM);
                 WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                lp.y = 20;
+                lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                lp.width = LinearLayout.LayoutParams.MATCH_PARENT;
                 dialogWindow.setAttributes(lp);
+
                 dialog.show();
                 break;
         }
@@ -291,7 +293,7 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
     public void SeeMyState(MyState myState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("当前状态");
-        builder.setMessage("location:" + myState.getLocation() + "classroom:" + myState.getClassroom() + "seatnumber:" + myState.getSeatnumber() + "starttime:" +myState.getStarttime());
+        builder.setMessage("校区:" + myState.getLocation() + "\n自习室:" + myState.getClassroom()+ "\n座位号:" + myState.getSeatnumber() +"\n开始时间:" +myState.getStarttime());
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -320,15 +322,15 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
     }
 
     @Override
-    public void JIESHUZANLISUCCESS() {
+    public void JIESHUZANLISUCCESS(String change1) {
         progressDialog.dismiss();
-        Toast.makeText(getActivity(),"结束暂离成功",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),change1,Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void FAILZANLI() {
+    public void FAILZANLI(String s) {
         progressDialog.dismiss();
-        Toast.makeText(getActivity(),"结束暂离失败",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),s,Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -351,6 +353,7 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.takePhoto:
+                dialog.dismiss();
                 if (EasyPermissions.hasPermissions(getActivity(),Manifest.permission.CAMERA)){
                     getPicFromCamera();//拍照
                 }else {
@@ -361,6 +364,7 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
 
                 break;
             case R.id.choosePhoto:
+                dialog.dismiss();
                 getPicFromAlbm();//从系统相册选择
                 break;
             case R.id.btn_cancel:
@@ -376,7 +380,8 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
         //判断版本
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {   //如果在Android7.0以上,使用FileProvider获取Uri
             intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName()+".provider", tempFile);
+            TLog.error("PROVIDER == "+ getActivity().getPackageName()+".fileprovider");
+            Uri contentUri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName()+".fileprovider", tempFile);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
             Log.e("getPicFromCamera", contentUri.toString());
         } else {    //否则使用Uri.fromFile(file)方法获取Uri
@@ -401,8 +406,11 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
                 if (resultCode == RESULT_OK) {
                     //用相机返回的照片去调用剪裁也需要对Uri进行处理
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        Uri contentUri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName()+".provider", tempFile);
+                        //intent.getData();
+                        Uri contentUri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName()+".fileprovider", tempFile);
                         startPhotoZoom(contentUri);//开始对图片进行裁剪处理
+                        //startPhotoZoom(intent.getData());
+                        TLog.error("777777777777777777777");
                     } else {
                         startPhotoZoom(Uri.fromFile(tempFile));//开始对图片进行裁剪处理
                     }
@@ -410,6 +418,9 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
                 break;
             case ALBUM_REQUEST_CODE:    //调用相册后返回
                 if (resultCode == RESULT_OK) {
+                    if(intent == null){
+                        TLog.error("intent为空");
+                    }
                     Uri uri = intent.getData();
                     startPhotoZoom(uri); // 开始对图片进行裁剪处理
                 }
@@ -421,6 +432,7 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
                     mPresenter.UploadTouxiang(mFile,userid);
                 } else {
                     Log.e("data","data为空");
+                    TLog.error("intent为空2");
                 }
                 break;
         }
@@ -447,6 +459,7 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
         File out = new File(getPath());
         if (!out.getParentFile().exists()) {
             out.getParentFile().mkdirs();
+            TLog.error("执行了吗？");
         }
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(out));
         startActivityForResult(intent, CROP_SMALL_PICTURE);
@@ -455,8 +468,11 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
     public  String getPath() {
         //resize image to thumb
         if (mFile == null) {
-            mFile = Environment.getExternalStorageDirectory() + "/" +"wode/"+ "outtemp.png";
+           TLog.error("*******************************************");
+            //mFile = Environment.getExternalStorageDirectory() + "/" +"wode/"+ "outtemp.png";
+            mFile = Environment.getExternalStorageDirectory() + "/" +"outtemp.png";
         }
+        TLog.error("=================="+mFile+"=================");
         return mFile;
     }
     public String saveImage(String name, Bitmap bmp) {

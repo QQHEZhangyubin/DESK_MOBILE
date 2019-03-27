@@ -23,5 +23,7 @@ public class PulldshuoshuoContract {
 
     interface  Presenter extends BasePresenter<View> {
         void  FabiaoShuoShuo(List<MultipartBody.Part> file, String data,String username);
+
+        void FabiaoShuoShuoT(String text, String username);
     }
 }

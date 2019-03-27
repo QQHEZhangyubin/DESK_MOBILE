@@ -49,7 +49,7 @@ public class NoScrollGridAdapter extends BaseAdapter {
                 .build();
         ImageLoader.getInstance().displayImage(imageUrls.get(position), imageView, options);
         */
-        Glide.with(ctx).load(imageUrls.get(position)).skipMemoryCache(false).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher_round).into(imageView);
+        Glide.with(ctx).load(imageUrls.get(position)).skipMemoryCache(false).placeholder(R.mipmap.default_error).error(R.mipmap.default_error).into(imageView);
         return view;
     }
 }

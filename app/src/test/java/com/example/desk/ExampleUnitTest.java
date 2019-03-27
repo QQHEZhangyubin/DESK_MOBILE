@@ -15,22 +15,12 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        //assertEquals(4, 2 + 2);
-        Pattern p = Pattern.compile("[\\u4e00-\\u9fa5]+|\\d+");
-        Matcher m = p.matcher( "东区401" );
-        if (m.find()){
-            System.out.println(m.group());
+       String k = "/storage/emulated/0/wode/outtemp.png";
+        String[] dataStr = k.split("/");
+        String fileTruePath = "/sdcard";
+        for(int i=4;i<dataStr.length;i++){
+            fileTruePath = fileTruePath+"/"+dataStr[i];
         }
-        if (m.find()){
-            System.out.println(m.group());
-        }
-        //String location = m.group(1);
-        //System.out.println(location);
-        //String classroom = m.group(2);
-       // System.out.println(classroom);
-        //while (m.find()){
-          ///  System.out.println(m.group());
-        //}
-
+        System.out.println(fileTruePath);
     }
 }

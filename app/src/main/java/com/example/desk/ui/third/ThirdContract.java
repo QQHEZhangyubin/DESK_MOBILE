@@ -19,9 +19,9 @@ public class ThirdContract {
 
         void Touxiangfail(String failmessage);
 
-        void JIESHUZANLISUCCESS();
+        void JIESHUZANLISUCCESS(String change1);
 
-        void FAILZANLI();
+        void FAILZANLI(String s);
     }
 
     interface  Presenter extends BasePresenter<View> {

@@ -64,6 +64,7 @@
         app:left_icon="@drawable/ic_nick_name"
         app:show_bottom_line="true"
         app:left_text="学院"
+        android:clickable="false"
         app:right_text="计算机与控制工程学院"/>
     <com.example.desk.view.ItemView
         android:layout_width="match_parent"
@@ -72,6 +73,7 @@
         app:show_bottom_line="true"
         app:left_icon="@drawable/ic_sex"
         app:left_text="性别"
+        android:clickable="false"
         app:right_text="男"
       />
     <com.example.desk.view.ItemView
@@ -80,6 +82,7 @@
         app:left_text="班级"
         app:show_bottom_line="true"
         app:right_text="软件161"
+        android:clickable="false"
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
     <com.example.desk.view.ItemView
@@ -88,6 +91,7 @@
         android:layout_height="50dp"
         app:left_icon="@drawable/ic_phone"
         app:left_text="邮箱"
+        android:clickable="false"
         app:right_text="13608428279@163.com"/>
 
 </LinearLayout>

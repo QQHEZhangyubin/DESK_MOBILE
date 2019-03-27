@@ -43,10 +43,13 @@ public interface APIService {
     //提交回复
     @POST("comreply/reply")
     Observable<T2> AddReply(@Query("userid") String userid, @Query("replyContent") String replyContent, @Query("replyComId") String replyComId);
-    //发表说说
+    //发表说说,带图片
     @Multipart
     @POST("upload")
     Observable<Status> uploadImgs(@Part List<MultipartBody.Part> file, @Query("data2") String data, @Query("userid") String userid);
+    //发表说说,不带图片
+    @POST("uploadT")
+    Observable<Status> uploadImgsT(@Query("data2") String data,@Query("userid") String userid);
 
     @POST("doRegister")
     Observable<T3> registeruser(@Query("userid") String userid,@Query("password") String password,@Query("college") String college,@Query("classs") String classs,@Query("birthday") String birthday,@Query("email") String email,@Query("gender") String gender);
@@ -79,5 +82,5 @@ public interface APIService {
     //上传头像
     @Multipart
     @POST("uploadtouxiang")
-    Observable<T3> uploadTouxiangImgs(@Part MultipartBody.Part file, @Query("userid") String userid);
+    Observable<Status> uploadTouxiangImgs(@Part MultipartBody.Part file, @Query("userid") String userid);
 }

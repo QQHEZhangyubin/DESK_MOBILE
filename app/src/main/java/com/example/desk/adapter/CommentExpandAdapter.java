@@ -94,9 +94,9 @@ public class CommentExpandAdapter extends BaseExpandableListAdapter {
         } else {
             groupHolder = (GroupHolder) convertView.getTag();
         }
-        Glide.with(context).load(R.drawable.user_other)
+        Glide.with(context).load(commentDetailBeans.get(groupPosition).getUserLogo())
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .error(R.mipmap.ic_launcher)
+                .error(R.drawable.user_logo)
                 .centerCrop()
                 .into(groupHolder.commentItemLogo);
         groupHolder.commentItemUserName.setText(commentDetailBeans.get(groupPosition).getNickName());

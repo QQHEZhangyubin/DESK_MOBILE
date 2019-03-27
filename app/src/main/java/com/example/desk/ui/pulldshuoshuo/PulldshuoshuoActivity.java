@@ -8,10 +8,13 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -117,9 +120,21 @@ public class PulldshuoshuoActivity extends MVPBaseActivity<PulldshuoshuoContract
      */
     private void captureImage(String sdpath) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //缺少版本控制
         // 指定照片保存路径（SD卡），image.jpg为一个临时文件，每次拍照后这个图片都会被替换
-        Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "image.jpg"));
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        if(Build.VERSION.SDK_INT < 24){
+            TLog.error("android6");
+            Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "image.jpg"));
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        }else {
+            TLog.error("android78");
+            intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            //TLog.error("PROVIDER == "+ getActivity().getPackageName()+".fileprovider");
+            Uri contentUri = FileProvider.getUriForFile(PulldshuoshuoActivity.this, PulldshuoshuoActivity.this.getPackageName()+".fileprovider", new File(Environment.getExternalStorageDirectory(), "image.jpg"));
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
+            Log.e("getPicFromCamera", contentUri.toString());
+        }
+
         startActivityForResult(intent, IMAGE_CAPTURE);
     }
     @Override
@@ -157,18 +172,17 @@ public class PulldshuoshuoActivity extends MVPBaseActivity<PulldshuoshuoContract
                             // 为防止原始图片过大导致内存溢出，这里先缩小原图显示，然后释放原始Bitmap占用的内存
                             Bitmap smallBitmap = ImageTools.zoomBitmap(photo, photo.getWidth() / SCALE, photo.getHeight() / SCALE);
                             // 释放原始图片占用的内存，防止out of memory异常发生
-                            photo.recycle();
+                            //photo.recycle();
                             // 生成一个图片文件名
                             fileName = String.valueOf(System.currentTimeMillis());
                             // 将处理过的图片添加到缩略图列表并保存到本地
-                            ImageTools.savePhotoToSDCard(smallBitmap, FileUtils.SDPATH, fileName);
+                            //ImageTools.savePhotoToSDCard(smallBitmap, FileUtils.SDPATH, fileName);
+                            ImageTools.savePhotoToSDCard(photo, FileUtils.SDPATH, fileName);
                             lists.add(smallBitmap);
                             list_path.add(FileUtils.SDPATH + fileName + ".jpg");
-
                             for (int i = 0; i < list_path.size(); i++) {
                                 TLog.log("第" + i + "照片的地址：" + list_path.get(i));
                             }
-
                             // 更新GrideView
                             gvAdapter.setList(lists);
                         }
@@ -188,16 +202,23 @@ public class PulldshuoshuoActivity extends MVPBaseActivity<PulldshuoshuoContract
     @OnClick(R.id.tv_send)
     public void onViewClicked() {
         String text = etText.getText().toString();
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        for (int i = 0; i <list_path.size() ; i++) {
-            TLog.error(list_path.get(i));
-            File file = new File(list_path.get(i));
-            RequestBody phototRequestBody = RequestBody.create(MediaType.parse("image/png"), file);
-            builder.addFormDataPart(StaticClass.FabiaoShuoShuo,file.getName(),phototRequestBody);
+        if (list_path.size() != 0){
+            MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            for (int i = 0; i <list_path.size() ; i++) {
+                TLog.error(list_path.get(i));
+                File file = new File(list_path.get(i));
+                RequestBody phototRequestBody = RequestBody.create(MediaType.parse("image/png"), file);
+                builder.addFormDataPart(StaticClass.FabiaoShuoShuo,file.getName(),phototRequestBody);
+            }
+            List<MultipartBody.Part> parts = builder.build().parts();
+            String username = ShareUtils.getString(getApplicationContext(), StaticClass.userid, "");
+            mPresenter.FabiaoShuoShuo(parts,text,username);
+        }else {
+           // Toast.makeText(PulldshuoshuoActivity.this,"please add some photos ",Toast.LENGTH_SHORT).show();
+            String username = ShareUtils.getString(getApplicationContext(), StaticClass.userid, "");
+            mPresenter.FabiaoShuoShuoT(text,username);
         }
-        List<MultipartBody.Part> parts = builder.build().parts();
-        String username = ShareUtils.getString(getApplicationContext(), StaticClass.userid, "");
-        mPresenter.FabiaoShuoShuo(parts,text,username);
+
     }
     @Override
     protected void onDestroy() {

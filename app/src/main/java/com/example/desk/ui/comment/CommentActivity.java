@@ -286,6 +286,8 @@ public class CommentActivity extends MVPBaseActivity<CommentContract.View, Comme
     @Override
     public void AddCommentSuccess(String userid, String content, String s) {
         //评论成功
+        mPresenter.generateDate(brower);
+       /*
         CommentDetailBean detailBean = new CommentDetailBean(userid, content, s);
         if (adapter == null){
             TLog.error("adapter == null");
@@ -295,7 +297,7 @@ public class CommentActivity extends MVPBaseActivity<CommentContract.View, Comme
         }else {
             adapter.addTheCommentData(detailBean);
         }
-
+       */
         Toast.makeText(CommentActivity.this,"评论成功",Toast.LENGTH_SHORT).show();
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.desk.api.APIWrapper;
 import com.example.desk.entity.MyState;
+import com.example.desk.entity.Status;
 import com.example.desk.entity.T3;
 import com.example.desk.entity.T5;
 import com.example.desk.mvp.BasePresenterImpl;
@@ -112,7 +113,7 @@ public class ThirdPresenter extends BasePresenterImpl<ThirdContract.View> implem
         APIWrapper.getInstance().uploadTouxiangImgs(p,userid)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<T3>() {
+                .subscribe(new Subscriber<Status>() {
                     @Override
                     public void onCompleted() {
                         TLog.error("成功");
@@ -126,9 +127,9 @@ public class ThirdPresenter extends BasePresenterImpl<ThirdContract.View> implem
                     }
 
                     @Override
-                    public void onNext(T3 t3) {
-                        TLog.error("上传结果：：：" + t3.getMessage());
-                        uploadtouxiangmessage = t3.getMessage();
+                    public void onNext(Status status) {
+                        TLog.error("上传结果：：：" + status.getStatus());
+                        uploadtouxiangmessage = status.getStatus();
                     }
                 });
     }
@@ -142,17 +143,17 @@ public class ThirdPresenter extends BasePresenterImpl<ThirdContract.View> implem
                 .subscribe(new Subscriber<T5>() {
                     @Override
                     public void onCompleted() {
-                        mView.JIESHUZANLISUCCESS();
+                        mView.JIESHUZANLISUCCESS(change1);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mView.FAILZANLI();
+                        mView.FAILZANLI("与服务器建立联系失败！");
                     }
 
                     @Override
                     public void onNext(T5 t5) {
-
+                        change1 = t5.getChange1();
                     }
                 });
     }

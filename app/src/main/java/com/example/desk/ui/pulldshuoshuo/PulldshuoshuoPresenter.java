@@ -44,4 +44,28 @@ public class PulldshuoshuoPresenter extends BasePresenterImpl<PulldshuoshuoContr
                     }
                 });
     }
+
+    @Override
+    public void FabiaoShuoShuoT(String text, String username) {
+        APIWrapper.getInstance().uploadImgsT(text,username)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Status>() {
+                    @Override
+                    public void onCompleted() {
+                        mView.FabiaoSuccess();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        TLog.error(e.toString());
+                        mView.FabiaoFail();
+                    }
+
+                    @Override
+                    public void onNext(Status status) {
+                        TLog.error("onNext " + status.getStatus());
+                    }
+                });
+    }
 }

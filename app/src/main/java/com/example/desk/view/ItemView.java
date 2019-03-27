@@ -69,6 +69,7 @@ public class ItemView extends LinearLayout {
 
         //设置点击事件
         //给整个item设置点击事件
+        /*
        rootView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +84,7 @@ public class ItemView extends LinearLayout {
                 listener.itemClick(rightDesc.getText().toString());
             }
         });
-
+ */
         ta.recycle();
     }
 

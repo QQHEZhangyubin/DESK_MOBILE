@@ -1,7 +1,9 @@
 package com.example.desk;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -22,8 +24,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
+public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener,EasyPermissions.PermissionCallbacks {
+    private static final int CAMERA_REQUEST_CODE = 89;
     @BindView(R.id.mFragment)
     FrameLayout mFragment;
     @BindView(R.id.mRb_home)
@@ -48,7 +52,23 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         fragments = getFragments(); //添加布局
         //添加默认布局
         normalFragment();
+        //申请权限
+        String[] pres = {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(MainActivity.this,pres)){
+        }else {
+            // request for one permission
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_camera),
+                    CAMERA_REQUEST_CODE, pres);
+        }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //将请求结果传递EasyPermission库处理
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
     //默认布局
     private void normalFragment() {
         fm = getSupportFragmentManager();
@@ -112,5 +132,15 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         }else {
             mRbHome.setTextColor(ContextCompat.getColor(this,R.color.colorRadioButtonN));
         }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        Toast.makeText(MainActivity.this,"用户授权成功！",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        Toast.makeText(MainActivity.this,"用户授权失败，如遇到不能打开相机情况请前往手机设置给予权限",Toast.LENGTH_SHORT).show();
     }
 }
