@@ -58,13 +58,12 @@
         android:text="今天又是雾霾！"
         android:textColor="#080808"
         android:textSize="16sp" />
-
     <com.example.desk.view.NoScrollGridView
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_content"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="1dp"
         android:layout_marginTop="3dp"
         android:layout_toRightOf="@id/iv_avatar"
         android:columnWidth="80dp"
@@ -73,4 +72,10 @@
         android:numColumns="3"
         android:stretchMode="columnWidth"
         android:verticalSpacing="2.5dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="#E8E8E8"
+        android:layout_alignParentBottom="true"></View>
 </RelativeLayout>

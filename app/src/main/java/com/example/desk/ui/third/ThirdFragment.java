@@ -150,8 +150,8 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
             public void click() {
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
                 builder2.setTitle("软件说明");
-                builder2.setMessage("***************************************************************************************************************");
-                builder2.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                builder2.setMessage(getString(R.string.tips));
+                builder2.setPositiveButton("好的", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         alertDialog.dismiss();
@@ -292,7 +292,7 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
     @Override
     public void SeeMyState(MyState myState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("当前状态");
+        builder.setTitle("当前状态：" + myState.getStatus());
         builder.setMessage("校区:" + myState.getLocation() + "\n自习室:" + myState.getClassroom()+ "\n座位号:" + myState.getSeatnumber() +"\n开始时间:" +myState.getStarttime());
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
