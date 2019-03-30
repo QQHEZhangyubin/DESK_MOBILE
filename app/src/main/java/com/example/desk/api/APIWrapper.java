@@ -3,6 +3,8 @@ package com.example.desk.api;
 
 
 
+import com.example.desk.MyApplication;
+import com.example.desk.callback.DownloadCallBack;
 import com.example.desk.entity.CommentBean;
 import com.example.desk.entity.Desk;
 import com.example.desk.entity.MyState;
@@ -16,11 +18,20 @@ import com.example.desk.entity.T4;
 import com.example.desk.entity.T5;
 import com.example.desk.entity.U2;
 import com.example.desk.entity.User;
+import com.example.desk.util.ShareUtils;
+import com.example.desk.util.StaticClass;
+import com.example.desk.util.TLog;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -101,5 +112,94 @@ public class APIWrapper extends RetrofitUtil {
     }
     public Observable<T5> JieshuZanli(String userid){
         return getmAPIService().JieshuZanli(userid);
+    }
+
+    public Observable<ResponseBody> executeDownload(String range ,String url){
+        return getmAPIService().executeDownload(range,url);
+    }
+
+
+    public void downloadFile(final long range, final String url, final String fileName, final DownloadCallBack downloadCallback){
+        //断点续传时请求的总长度
+        File file = new File(StaticClass.APP_ROOT_PATH + StaticClass.DOWNLOAD_DIR, fileName);
+        String totalLength = "-";
+        if (file.exists()){
+            totalLength += file.length();
+        }
+        APIWrapper.getInstance().executeDownload("bytes=" + Long.toString(range) + totalLength, url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ResponseBody>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        downloadCallback.onError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        RandomAccessFile randomAccessFile = null;
+                        InputStream inputStream = null;
+                        long total = range;
+                        long responseLength = 0;
+                        try{
+                            byte[] buf = new byte[2048];
+                            int len = 0;
+                            responseLength = responseBody.contentLength();
+                            inputStream = responseBody.byteStream();
+                            String filePath = StaticClass.APP_ROOT_PATH + StaticClass.DOWNLOAD_DIR;
+                            File file = new File(filePath,fileName);
+                            File dir = new File(filePath);
+                            if (!dir.exists()){
+                                dir.mkdirs();
+                            }
+                            try {
+                                randomAccessFile = new RandomAccessFile(file,"rwd");
+                                if (range == 0){
+                                    try {
+                                        randomAccessFile.setLength(responseLength);
+                                        randomAccessFile.seek(range);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            } catch (FileNotFoundException e) {
+
+                            }
+                            int progress = 0;
+                            int lastProgress = 0;
+                            while ((len = inputStream.read(buf)) != -1){
+                                randomAccessFile.write(buf,0,len);
+                                total += len;
+                                ShareUtils.save(MyApplication.getInstance().getApplicationContext(),url,total);
+                                lastProgress = progress;
+                                progress = (int) (total *100 / randomAccessFile.length());
+                                if (progress > 0 && progress != lastProgress){
+                                    downloadCallback.onProgress(progress);
+                                }
+                            }
+                            downloadCallback.onCompleted();
+                        } catch (IOException e) {
+                            TLog.error(e.getMessage());
+                            downloadCallback.onError(e.getMessage());
+                            e.printStackTrace();
+                        }finally {
+                            try{
+                                if (randomAccessFile != null){
+                                    randomAccessFile.close();
+                                }
+                                if (inputStream != null){
+                                    inputStream.close();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
     }
 }

@@ -5,8 +5,8 @@ android {
         applicationId "com.example.desk"
         minSdkVersion 20
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -32,7 +32,9 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.0'
     implementation 'com.easyandroid:easytools:1.1.9'
     implementation 'com.android.support:cardview-v7:24.2.1'
-    implementation 'com.yangy:YZxing-lib:2.1'
+
+    implementation 'com.github.xuexiangjys:XQRCode:1.0.0'
+
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'

@@ -15,19 +15,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.desk.MainActivity;
 import com.example.desk.R;
 import com.example.desk.adapter.DeskAdapter;
 import com.example.desk.entity.Desk;
 import com.example.desk.mvp.MVPBaseActivity;
 import com.example.desk.util.ShareUtils;
 import com.example.desk.util.StaticClass;
-import com.example.qrcode.Constant;
-import com.example.qrcode.ScannerActivity;
+import com.xuexiang.xqrcode.XQRCode;
+import com.xuexiang.xqrcode.ui.CaptureActivity;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -74,6 +71,7 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         collapsingToolbar.setTitle(position);
+
     }
     //当前座位正在被他人使用
     @Override
@@ -89,6 +87,7 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
     @Override
     public void Success2(String info) {
         Toast.makeText(RoomActivity.this,info,Toast.LENGTH_SHORT).show();
+       // mPresenter.getDataTwo();
     }
 
     @Override
@@ -99,8 +98,10 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
             public void RequestDesk(Desk desk) {
                 if (desk.getState().equals("c")){
                     tempdesk = desk;
-                    Intent intent = new Intent(RoomActivity.this,ScannerActivity.class);
-                    startActivityForResult(intent,RESULT_REQUEST_CODE);
+
+                    Intent intent = new Intent(RoomActivity.this, CaptureActivity.class);
+                    startActivityForResult(intent, RESULT_REQUEST_CODE);
+
                 }else {
                     Toast.makeText(RoomActivity.this,"当前位置不可选择",Toast.LENGTH_SHORT).show();
                 }
@@ -118,20 +119,27 @@ public class RoomActivity extends MVPBaseActivity<RoomContract.View, RoomPresent
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK){
             switch (requestCode){
                 case RESULT_REQUEST_CODE:
                     if (data == null){
+                        Toast.makeText(RoomActivity.this,"没有检测到二维码存在",Toast.LENGTH_SHORT).show();
                         return;
+                    }else {
+                        Bundle bundle = data.getExtras();
+                        if (bundle != null){
+                            if (bundle.getInt(XQRCode.RESULT_TYPE) == XQRCode.RESULT_SUCCESS){
+                                String result = bundle.getString(XQRCode.RESULT_DATA);
+                                String userid = ShareUtils.getString(getApplicationContext(), StaticClass.userid, "");
+                                mPresenter.QiangZuo(result,tempdesk,userid);//根据二维码data，具体desk data抢座位
+                            }
+                        }
                     }
-                    String content = data.getStringExtra(Constant.EXTRA_RESULT_CONTENT);//得到扫描的二维码data
-                    String userid = ShareUtils.getString(getApplicationContext(), StaticClass.userid, "");
-                    mPresenter.QiangZuo(content,tempdesk,userid);//根据二维码data，具体desk data抢座位
                     break;
                 default:
                     break;
-            }
+         }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

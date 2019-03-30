@@ -1,5 +1,7 @@
 package com.example.desk.ui.third;
 
+import android.content.Context;
+
 import com.example.desk.entity.MyState;
 import com.example.desk.mvp.BasePresenter;
 import com.example.desk.mvp.BaseView;
@@ -22,6 +24,8 @@ public class ThirdContract {
         void JIESHUZANLISUCCESS(String change1);
 
         void FAILZANLI(String s);
+
+        void UpDateSoftWareMessage(String updateinfo);
     }
 
     interface  Presenter extends BasePresenter<View> {
@@ -30,5 +34,6 @@ public class ThirdContract {
         void Seemystate(String userid);
         void UploadTouxiang(String filepath,String userid);
         void  changestatus2(String userid);
+        void UpdateSoftWare(Context context);
     }
 }

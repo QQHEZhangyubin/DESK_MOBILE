@@ -151,10 +151,17 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
                 builder2.setTitle("软件说明");
                 builder2.setMessage(getString(R.string.tips));
-                builder2.setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                builder2.setPositiveButton("版本更新", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         alertDialog.dismiss();
+                        progressDialog = new ProgressDialog(getActivity());
+                        progressDialog.setTitle("检查更新");
+                        progressDialog.setMessage("可能需要...");
+                        progressDialog.setIndeterminate(true);
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+                        mPresenter.UpdateSoftWare(getActivity());//联网更新
                     }
                 });
                 alertDialog = builder2.create();
@@ -331,6 +338,12 @@ public class ThirdFragment extends MVPBaseFragment<ThirdContract.View, ThirdPres
     public void FAILZANLI(String s) {
         progressDialog.dismiss();
         Toast.makeText(getActivity(),s,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void UpDateSoftWareMessage(String updateinfo) {
+        //progressDialog.dismiss();
+        Toast.makeText(getActivity(),updateinfo,Toast.LENGTH_SHORT).show();
     }
 
     /**

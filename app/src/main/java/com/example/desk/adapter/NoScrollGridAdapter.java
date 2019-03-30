@@ -1,6 +1,7 @@
 package com.example.desk.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,6 +9,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.desk.R;
+import com.example.desk.util.TLog;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -24,7 +28,8 @@ public class NoScrollGridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return imageUrls == null ? 0:imageUrls.size();
+        TLog.log("imgurl:" + imageUrls.size());
+        return imageUrls.size();
     }
 
     @Override
@@ -41,7 +46,7 @@ public class NoScrollGridAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = View.inflate(ctx, R.layout.item_gridview, null);
         ImageView imageView = (ImageView) view.findViewById(R.id.iv_image);
-        /*
+       /*
         DisplayImageOptions options = new DisplayImageOptions.Builder()//
                 .cacheInMemory(true)//
                 .cacheOnDisk(true)//
@@ -49,7 +54,12 @@ public class NoScrollGridAdapter extends BaseAdapter {
                 .build();
         ImageLoader.getInstance().displayImage(imageUrls.get(position), imageView, options);
         */
-        Glide.with(ctx).load(imageUrls.get(position)).skipMemoryCache(false).placeholder(R.mipmap.default_error).error(R.mipmap.default_error).into(imageView);
+        Glide.with(ctx).load(imageUrls.get(position))
+                //.skipMemoryCache(false)
+                .placeholder(R.mipmap.default_error)
+                .error(R.mipmap.default_error)
+                .into(imageView);
         return view;
     }
+
 }

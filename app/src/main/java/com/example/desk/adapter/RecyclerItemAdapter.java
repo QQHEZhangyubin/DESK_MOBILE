@@ -53,18 +53,24 @@ public class RecyclerItemAdapter extends RecyclerView.Adapter<RecyclerItemAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        TLog.log("===========执行了===========");
         final ShuoShuo shuo = items.get(position);
         holder.tvTitle.setText(shuo.getUserName());
         holder.tvContent.setText(shuo.getContent());
         holder.tvScanner.setText(shuo.getBrowser());
         holder.tvTime.setText(shuo.getTime());
-
-        Glide.with(mContext).load(shuo.getPicture()).into(holder.ivAvatar);
+        if (shuo.getPicture() == null || shuo.getPicture().equals("")) {
+            Glide.with(mContext).load(R.drawable.user_logo).into(holder.ivAvatar);
+        }else {
+            Glide.with(mContext).load(shuo.getPicture()).into(holder.ivAvatar);
+        }
         final ArrayList<String> imageUrls = shuo.getEpicture();
         if (imageUrls == null || imageUrls.size() == 0){
             //没有图片资源隐藏GridView
+            TLog.log("执行了");
             holder.gridview.setVisibility(View.GONE);
         }else {
+            TLog.log("没有执行");
             holder.gridview.setAdapter(new NoScrollGridAdapter(mContext, imageUrls));
         }
         // 点击回帖九宫格，查看大图

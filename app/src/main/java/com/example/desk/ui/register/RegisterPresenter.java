@@ -8,6 +8,9 @@ import com.example.desk.entity.User;
 import com.example.desk.mvp.BasePresenterImpl;
 import com.example.desk.util.TLog;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -28,18 +31,41 @@ public class RegisterPresenter extends BasePresenterImpl<RegisterContract.View> 
         if(databean.getGender() == null){
             mView.erroremail("没有选择性别");
             valid = false;
+            return valid;
         }
         if (!databean.getUserid().isEmpty() && !databean.getCollege().isEmpty() && !databean.getClasss().isEmpty()
                 && !databean.getBirthday().isEmpty() && !databean.getEmail().isEmpty() && !databean.getPassword().isEmpty()
                 ){
+            if (databean.getUserid().length() == 10){
+                Pattern  p = Pattern.compile("[0-9]*");
+                Matcher isNum = p.matcher(databean.getUserid());
+                if (!isNum.matches()){
+                    mView.erroremail("内容不符合学号要求");
+                    valid = false;
+                    return valid;
+                }
+            }else {
+                mView.erroremail("学号位数不符合要求");
+                valid = false;
+                return valid;
+            }
+
+            if (databean.getBirthday().length() != 10){
+                mView.erroremail("生日格式不符合要求。");
+                valid = false;
+                return valid;
+            }
             if (!Patterns.EMAIL_ADDRESS.matcher(databean.getEmail()).matches()){
                 mView.erroremail("邮箱信息存在问题！");
                 valid = false;
+                return valid;
             }
             if (databean.getPassword().length()<4||databean.getPassword().length()>10){
                 mView.errorpwd("密码需要在4-10位之间！");
                 valid = false;
+                return valid;
             }
+
         }else {
             mView.emptymessage("注册填写信息存在空项！");
             valid = false;

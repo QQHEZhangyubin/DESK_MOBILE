@@ -64,4 +64,13 @@ public class ShareUtils {
         sp.edit().clear().commit();
     }
 
+    public static void save(Context applicationContext, String url, long total) {
+        SharedPreferences sp = applicationContext.getSharedPreferences(NAME,Context.MODE_PRIVATE);
+        sp.edit().putLong(url,total).commit();
+    }
+
+    public static Long get(Context applicationContext, String url,Long defvalue){
+        SharedPreferences sp = applicationContext.getSharedPreferences(NAME,Context.MODE_PRIVATE);
+        return sp.getLong(url,defvalue);
+    }
 }

@@ -1,13 +1,19 @@
 package com.example.desk.ui.third;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Toast;
 
+import com.example.desk.MainActivity;
 import com.example.desk.api.APIWrapper;
 import com.example.desk.entity.MyState;
 import com.example.desk.entity.Status;
 import com.example.desk.entity.T3;
 import com.example.desk.entity.T5;
 import com.example.desk.mvp.BasePresenterImpl;
+import com.example.desk.service.DownloadIntentService;
 import com.example.desk.util.StaticClass;
 import com.example.desk.util.TLog;
 
@@ -21,6 +27,8 @@ import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static com.example.desk.util.StaticClass.DOWNLOADAPK_ID;
 
 /**
  * MVPPlugin
@@ -156,5 +164,45 @@ public class ThirdPresenter extends BasePresenterImpl<ThirdContract.View> implem
                         change1 = t5.getChange1();
                     }
                 });
+    }
+
+    @Override
+    public void UpdateSoftWare(Context mContext) {
+        if (isServiceRunning(DownloadIntentService.class.getName(),mContext)) {
+            mView.UpDateSoftWareMessage("正在下载");
+            return;
+        }
+        //String downloadUrl = http://sqdd.myapp.com/myapp/qqteam/tim/down/tim.apk;
+        String downloadUrl = "http://172.16.63.128:8080/photo/110.apk";
+        Intent intent = new Intent(mContext, DownloadIntentService.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("download_url", downloadUrl);
+        bundle.putInt("download_id", DOWNLOADAPK_ID);
+        bundle.putString("download_file", downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1));
+        intent.putExtras(bundle);
+        mContext.startService(intent);
+    }
+    /**
+     * 用来判断服务是否运行.
+     *
+     * @param context 判断的服务名字
+     * @return true 在运行 false 不在运行
+     */
+    private boolean isServiceRunning(String name,Context context) {
+        boolean isRunning = false;
+        ActivityManager activityManager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> serviceList = activityManager
+                .getRunningServices(Integer.MAX_VALUE);
+        if (!(serviceList.size() > 0)) {
+            return false;
+        }
+        for (int i = 0; i < serviceList.size(); i++) {
+            if (serviceList.get(i).service.getClassName().equals(name) == true) {
+                isRunning = true;
+                break;
+            }
+        }
+        return isRunning;
     }
 }

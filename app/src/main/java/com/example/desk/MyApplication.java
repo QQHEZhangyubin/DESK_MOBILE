@@ -1,6 +1,7 @@
 package com.example.desk;
 
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.os.Handler;
@@ -16,18 +17,22 @@ import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+
 import java.io.File;
 
 public class MyApplication extends Application {
-    private MyApplication instance;
+    private static MyApplication instance;
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         initImageloader();
-    }
 
+    }
+   public static Context getInstance(){
+        return instance;
+   }
     private void initImageloader() {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.default_error)
@@ -65,6 +70,5 @@ public class MyApplication extends Application {
                 .defaultDisplayImageOptions(options) // default
                 .writeDebugLogs().build();
         ImageLoader.getInstance().init(config);
-
     }
 }

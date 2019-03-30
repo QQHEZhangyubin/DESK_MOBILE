@@ -20,10 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 import rx.Observable;
 
 public interface APIService {
@@ -83,4 +88,8 @@ public interface APIService {
     @Multipart
     @POST("uploadtouxiang")
     Observable<Status> uploadTouxiangImgs(@Part MultipartBody.Part file, @Query("userid") String userid);
+
+    @Streaming
+    @GET
+    Observable<ResponseBody> executeDownload(@Header("Range") String range, @Url() String url);
 }

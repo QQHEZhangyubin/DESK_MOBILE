@@ -19,6 +19,8 @@ import com.example.desk.entity.ShuoShuo;
 import com.example.desk.mvp.MVPBaseFragment;
 import com.example.desk.ui.comment.CommentActivity;
 import com.example.desk.ui.pulldshuoshuo.PulldshuoshuoActivity;
+import com.example.desk.util.ShareUtils;
+import com.example.desk.util.TLog;
 
 import java.util.ArrayList;
 
@@ -40,6 +42,7 @@ public class SecondFragment extends MVPBaseFragment<SecondContract.View, SecondP
     @BindView(R.id.ib_c)
     ImageButton ibC;
 
+
     public SecondFragment() {
     }
 
@@ -48,18 +51,37 @@ public class SecondFragment extends MVPBaseFragment<SecondContract.View, SecondP
         return secondFragment;
     }
 
+    @Override
+    public void onPause() {
+        TLog.error("onPause");
+        super.onPause();
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_second, container, false);
         unbinder = ButterKnife.bind(this, view);
+        TLog.error("onCreateView");
         mPresenter.initData2();//请求网络数据
         return view;
     }
 
     @Override
+    public void onStart() {
+        TLog.error("onStart");
+        boolean g = ShareUtils.getBoolean(getActivity().getApplicationContext(), "54", false);
+        if (g){
+            ShareUtils.deleShare(getActivity().getApplicationContext(),"54");
+            mPresenter.initData2();
+        }
+        super.onStart();
+    }
+
+    @Override
     public void onDestroyView() {
+        TLog.error("onDestroyView");
         super.onDestroyView();
         unbinder.unbind();
     }
@@ -68,6 +90,11 @@ public class SecondFragment extends MVPBaseFragment<SecondContract.View, SecondP
     public void Fail1() {
         //从服务器拉取不到说说内容
         Toast.makeText(getContext(), "拉取不到说说内容", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

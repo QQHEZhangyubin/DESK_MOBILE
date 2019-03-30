@@ -1,6 +1,8 @@
 package com.example.desk.ui.pulldshuoshuo;
 
 
+import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +16,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,9 +25,11 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.desk.MainActivity;
 import com.example.desk.R;
 import com.example.desk.adapter.GridViewAdapter;
 import com.example.desk.mvp.MVPBaseActivity;
+import com.example.desk.ui.login.LoginActivity;
 import com.example.desk.util.FileUtils;
 import com.example.desk.util.ImageTools;
 import com.example.desk.util.NAlertDialog;
@@ -74,6 +79,9 @@ public class PulldshuoshuoActivity extends MVPBaseActivity<PulldshuoshuoContract
     // 用于保存图片路径
     private List<String> list_path = new ArrayList<String>();
     private NAlertDialog nAlertDialog;
+
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,13 +99,16 @@ public class PulldshuoshuoActivity extends MVPBaseActivity<PulldshuoshuoContract
     @Override
     public void FabiaoSuccess() {
         //发表说说成功
+        progressDialog.dismiss();
         Toast.makeText(PulldshuoshuoActivity.this,"发布成功",Toast.LENGTH_SHORT).show();
+        ShareUtils.putBoolean(getApplicationContext(),"54",true);
         finish();
     }
 
     @Override
     public void FabiaoFail() {
         //发表说说失败
+        progressDialog.dismiss();
         Toast.makeText(PulldshuoshuoActivity.this,"发布失败",Toast.LENGTH_SHORT).show();
         finish();
     }
@@ -202,23 +213,31 @@ public class PulldshuoshuoActivity extends MVPBaseActivity<PulldshuoshuoContract
     @OnClick(R.id.tv_send)
     public void onViewClicked() {
         String text = etText.getText().toString();
-        if (list_path.size() != 0){
-            MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-            for (int i = 0; i <list_path.size() ; i++) {
-                TLog.error(list_path.get(i));
-                File file = new File(list_path.get(i));
-                RequestBody phototRequestBody = RequestBody.create(MediaType.parse("image/png"), file);
-                builder.addFormDataPart(StaticClass.FabiaoShuoShuo,file.getName(),phototRequestBody);
-            }
-            List<MultipartBody.Part> parts = builder.build().parts();
-            String username = ShareUtils.getString(getApplicationContext(), StaticClass.userid, "");
-            mPresenter.FabiaoShuoShuo(parts,text,username);
+        if (text.isEmpty() && list_path.size() == 0){
+            Toast.makeText(PulldshuoshuoActivity.this,"不能发布空信息",Toast.LENGTH_SHORT).show();
         }else {
-           // Toast.makeText(PulldshuoshuoActivity.this,"please add some photos ",Toast.LENGTH_SHORT).show();
-            String username = ShareUtils.getString(getApplicationContext(), StaticClass.userid, "");
-            mPresenter.FabiaoShuoShuoT(text,username);
+            progressDialog = new ProgressDialog(PulldshuoshuoActivity.this,
+                    R.style.AppTheme_Dark_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("发布中...");
+            progressDialog.show();
+            if (list_path.size() != 0){
+                MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+                for (int i = 0; i <list_path.size() ; i++) {
+                    TLog.error(list_path.get(i));
+                    File file = new File(list_path.get(i));
+                    RequestBody phototRequestBody = RequestBody.create(MediaType.parse("image/png"), file);
+                    builder.addFormDataPart(StaticClass.FabiaoShuoShuo,file.getName(),phototRequestBody);
+                }
+                List<MultipartBody.Part> parts = builder.build().parts();
+                String username = ShareUtils.getString(getApplicationContext(), StaticClass.userid, "");
+                mPresenter.FabiaoShuoShuo(parts,text,username);
+            }else {
+                // Toast.makeText(PulldshuoshuoActivity.this,"please add some photos ",Toast.LENGTH_SHORT).show();
+                String username = ShareUtils.getString(getApplicationContext(), StaticClass.userid, "");
+                mPresenter.FabiaoShuoShuoT(text,username);
+            }
         }
-
     }
     @Override
     protected void onDestroy() {
@@ -275,4 +294,7 @@ public class PulldshuoshuoActivity extends MVPBaseActivity<PulldshuoshuoContract
     private int getDataSize() {
         return lists == null ? 0 : lists.size();
     }
+
+
+
 }

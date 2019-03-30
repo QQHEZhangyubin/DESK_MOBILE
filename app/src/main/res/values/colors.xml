@@ -21,4 +21,6 @@
     <color name="btn_gray">#d1d1d1</color>
     <color name="glass_gall">#c2ebef</color>
     <color name="light_blue">#87d0f2</color>
+
+    <color name="scan_corner_color">#0effc2</color>
 </resources>
