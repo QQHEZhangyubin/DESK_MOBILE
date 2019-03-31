@@ -25,7 +25,7 @@ public class ThirdContract {
 
         void FAILZANLI(String s);
 
-        void UpDateSoftWareMessage(String updateinfo);
+
     }
 
     interface  Presenter extends BasePresenter<View> {
@@ -34,6 +34,6 @@ public class ThirdContract {
         void Seemystate(String userid);
         void UploadTouxiang(String filepath,String userid);
         void  changestatus2(String userid);
-        void UpdateSoftWare(Context context);
+
     }
 }

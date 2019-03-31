@@ -43,7 +43,7 @@
             android:name=".ui.room.RoomActivity"
             android:theme="@style/NoActionAppTheme" />
         <activity android:name=".ui.ImagePagerActivity" />
-
+        <activity android:name=".ui.softupdate.SoftupdateActivity"/>
         <service android:name=".service.DownloadIntentService"></service>
         <provider
             android:name="android.support.v4.content.FileProvider"

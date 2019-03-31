@@ -2,6 +2,7 @@ package com.example.desk.service;
 
 import android.app.IntentService;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.FileProvider;
 import android.widget.RemoteViews;
 
 import com.example.desk.MyApplication;
@@ -40,8 +42,8 @@ public class DownloadIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-            String downloadUrl = intent.getExtras().getString("download_url");
-            final int downloadId = intent.getExtras().getInt("download_id");
+        String downloadUrl = intent.getExtras().getString("download_url");
+        final int downloadId = intent.getExtras().getInt("download_id");
 
            mDownloadFileName =  intent.getExtras().getString("download_file");
            TLog.log(downloadUrl);
@@ -60,22 +62,30 @@ public class DownloadIntentService extends IntentService {
 
         TLog.log("range = "+range);
         final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notify_download);
-
         remoteViews.setProgressBar(R.id.pb_progress,100,progress,false);
         remoteViews.setTextViewText(R.id.tv_progress,"已下载" + progress + "%");
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setContent(remoteViews)
-                .setTicker("正在下载")
-                .setSmallIcon(R.mipmap.ic_launcher);
-
-        mNotification = builder.build();
-
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel mChannel = new NotificationChannel("channel_001", mDownloadFileName, NotificationManager.IMPORTANCE_LOW);
+            mNotificationManager.createNotificationChannel(mChannel);
+            Notification.Builder builderr = new Notification.Builder(this)
+                    .setContent(remoteViews)
+                    .setChannelId("channel_001")
+                    .setTicker("正在下载")
+                    .setSmallIcon(R.mipmap.ic_launcher);
+            mNotification = builderr.build();
+        }else {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setContent(remoteViews)
+                    .setTicker("正在下载")
+                    .setSmallIcon(R.mipmap.ic_launcher);
+            mNotification = builder.build();
+        }
         mNotificationManager.notify(downloadId,mNotification);
         APIWrapper.getInstance().downloadFile(range, downloadUrl, mDownloadFileName, new DownloadCallBack() {
             @Override
             public void onProgress(int progress) {
+                TLog.log("已下载: " + progress);
                 remoteViews.setProgressBar(R.id.pb_progress,100,progress,false);
                 remoteViews.setTextViewText(R.id.tv_progress, "已下载" + progress + "%");
                 mNotificationManager.notify(downloadId,mNotification);
@@ -99,8 +109,18 @@ public class DownloadIntentService extends IntentService {
 
     private void installApp(File file) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+        Uri data = null;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+           data = Uri.fromFile(file);
+        }else {
+            intent.setAction(Intent.ACTION_INSTALL_PACKAGE);
+            //清单文件中配置的authorities
+            data = FileProvider.getUriForFile(this, "com.example.desk.fileprovider", file);
+            // 给目标应用一个临时授权
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//重点！！
+        }
+        intent.setDataAndType(data, "application/vnd.android.package-archive");
         startActivity(intent);
     }
 }

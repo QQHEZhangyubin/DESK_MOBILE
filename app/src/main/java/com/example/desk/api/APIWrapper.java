@@ -10,6 +10,7 @@ import com.example.desk.entity.Desk;
 import com.example.desk.entity.MyState;
 import com.example.desk.entity.Seat;
 import com.example.desk.entity.ShuoShuo;
+import com.example.desk.entity.Soft2;
 import com.example.desk.entity.Status;
 import com.example.desk.entity.T1;
 import com.example.desk.entity.T2;
@@ -33,6 +34,7 @@ import java.util.List;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -113,7 +115,9 @@ public class APIWrapper extends RetrofitUtil {
     public Observable<T5> JieshuZanli(String userid){
         return getmAPIService().JieshuZanli(userid);
     }
-
+    public Observable<Soft2> CheckSoftWareUpdate(){
+        return getmAPIService().CheckSoftWareUpdate();
+    }
     public Observable<ResponseBody> executeDownload(String range ,String url){
         return getmAPIService().executeDownload(range,url);
     }
@@ -127,9 +131,8 @@ public class APIWrapper extends RetrofitUtil {
             totalLength += file.length();
         }
         APIWrapper.getInstance().executeDownload("bytes=" + Long.toString(range) + totalLength, url)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<ResponseBody>() {
+                .subscribe(new Observer<ResponseBody>() {
+
                     @Override
                     public void onCompleted() {
 
@@ -157,49 +160,45 @@ public class APIWrapper extends RetrofitUtil {
                             if (!dir.exists()){
                                 dir.mkdirs();
                             }
-                            try {
-                                randomAccessFile = new RandomAccessFile(file,"rwd");
-                                if (range == 0){
-                                    try {
-                                        randomAccessFile.setLength(responseLength);
-                                        randomAccessFile.seek(range);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            } catch (FileNotFoundException e) {
-
+                            randomAccessFile = new RandomAccessFile(file, "rwd");
+                            if (range == 0) {
+                                randomAccessFile.setLength(responseLength);
                             }
+                            randomAccessFile.seek(range);
+
                             int progress = 0;
                             int lastProgress = 0;
-                            while ((len = inputStream.read(buf)) != -1){
-                                randomAccessFile.write(buf,0,len);
+
+                            while ((len = inputStream.read(buf)) != -1) {
+                                randomAccessFile.write(buf, 0, len);
                                 total += len;
                                 ShareUtils.save(MyApplication.getInstance().getApplicationContext(),url,total);
                                 lastProgress = progress;
-                                progress = (int) (total *100 / randomAccessFile.length());
-                                if (progress > 0 && progress != lastProgress){
+                                progress = (int) (total * 100 / randomAccessFile.length());
+                                if (progress > 0 && progress != lastProgress) {
                                     downloadCallback.onProgress(progress);
                                 }
                             }
                             downloadCallback.onCompleted();
-                        } catch (IOException e) {
-                            TLog.error(e.getMessage());
-                            downloadCallback.onError(e.getMessage());
+                    } catch (FileNotFoundException e) {
                             e.printStackTrace();
-                        }finally {
-                            try{
-                                if (randomAccessFile != null){
+                            downloadCallback.onError(e.getMessage());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            downloadCallback.onError(e.getMessage());
+                        } finally {
+                            try {
+                                if (randomAccessFile != null) {
                                     randomAccessFile.close();
                                 }
-                                if (inputStream != null){
+                                if (inputStream != null) {
                                     inputStream.close();
                                 }
-                            } catch (IOException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-                    }
-                });
+                        }
+                    });
     }
 }

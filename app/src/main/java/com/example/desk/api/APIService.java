@@ -7,6 +7,7 @@ import com.example.desk.entity.Desk;
 import com.example.desk.entity.MyState;
 import com.example.desk.entity.Seat;
 import com.example.desk.entity.ShuoShuo;
+import com.example.desk.entity.Soft2;
 import com.example.desk.entity.Status;
 import com.example.desk.entity.T1;
 import com.example.desk.entity.T2;
@@ -92,4 +93,8 @@ public interface APIService {
     @Streaming
     @GET
     Observable<ResponseBody> executeDownload(@Header("Range") String range, @Url() String url);
+
+    @POST("softupdate")
+    Observable<Soft2> CheckSoftWareUpdate();
+
 }
