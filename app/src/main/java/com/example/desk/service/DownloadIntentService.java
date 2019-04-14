@@ -44,8 +44,7 @@ public class DownloadIntentService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         String downloadUrl = intent.getExtras().getString("download_url");
         final int downloadId = intent.getExtras().getInt("download_id");
-
-           mDownloadFileName =  intent.getExtras().getString("download_file");
+        mDownloadFileName =  intent.getExtras().getString("download_file");
            TLog.log(downloadUrl);
            TLog.log(mDownloadFileName);
           final File file = new File(StaticClass.APP_ROOT_PATH + StaticClass.DOWNLOAD_DIR + mDownloadFileName);
@@ -66,17 +65,22 @@ public class DownloadIntentService extends IntentService {
         remoteViews.setTextViewText(R.id.tv_progress,"已下载" + progress + "%");
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel mChannel = new NotificationChannel("channel_001", mDownloadFileName, NotificationManager.IMPORTANCE_LOW);
+            TLog.log("i am android 8");
+            NotificationChannel mChannel = new NotificationChannel("chan", mDownloadFileName, NotificationManager.IMPORTANCE_DEFAULT);
             mNotificationManager.createNotificationChannel(mChannel);
-            Notification.Builder builderr = new Notification.Builder(this)
+            NotificationCompat.Builder builderr = new NotificationCompat.Builder(this, "chan")
+                    .setChannelId("chan")
                     .setContent(remoteViews)
-                    .setChannelId("channel_001")
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setOngoing(true)
                     .setTicker("正在下载")
                     .setSmallIcon(R.mipmap.ic_launcher);
             mNotification = builderr.build();
         }else {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"chan")
                     .setContent(remoteViews)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setOngoing(true)
                     .setTicker("正在下载")
                     .setSmallIcon(R.mipmap.ic_launcher);
             mNotification = builder.build();
