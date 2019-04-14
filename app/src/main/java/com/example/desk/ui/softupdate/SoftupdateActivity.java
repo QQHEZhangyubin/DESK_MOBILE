@@ -114,6 +114,7 @@ public class SoftupdateActivity extends MVPBaseActivity<SoftupdateContract.View,
             if (serviceList.get(i).service.getClassName().equals(className) == true) {
                 isRunning = true;
                 break;
+
             }
         }
         return isRunning;
