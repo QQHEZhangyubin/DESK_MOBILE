@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
@@ -22,6 +23,8 @@ import com.example.desk.util.ShareUtils;
 import com.example.desk.util.StaticClass;
 import com.example.desk.util.TLog;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
+
 import java.io.File;
 
 

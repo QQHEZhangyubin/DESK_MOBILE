@@ -82,7 +82,7 @@ public class SoftupdateActivity extends MVPBaseActivity<SoftupdateContract.View,
             case R.id.version_message:
                 if (isupdate){
                     if (isServiceRunning(DownloadIntentService.class.getName())) {
-                        Toast.makeText(SoftupdateActivity.this, "正在下载", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SoftupdateActivity.this, "正在下载,如无提示，请前往手机设置允许该应用提供通知", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Intent intent = new Intent(SoftupdateActivity.this, DownloadIntentService.class);
